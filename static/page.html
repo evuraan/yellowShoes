@@ -75,10 +75,11 @@
 		changeInpBox = true;
 		errShown = false;
 		rtlTCP = "none";
-		uiVersion = `1.3b`;
+		uiVersion = `1.3c`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
+
 
 
 		if (localStorage && 'rtlTCP' in localStorage) {
@@ -87,8 +88,14 @@
 			localStorage.rtlTCP = rtlTCP;
 		}
 
-		showfreq();
-		supBrah();
+		if (isiPhone()) {
+			$("#princi").html("Not supported on IPhone and Ipods, as they do not support wave playback.");
+			$("#princi").show();
+			$("#freqSlider").hide();
+		} else {
+			showfreq();
+			supBrah();
+		}
 		$("#freqSlider").change(function () {
 			chosenFrequency = $("#slider-1").val();
 			showfreq();
@@ -119,6 +126,12 @@
 			});
 		}
 
+		function isiPhone() {
+			return (
+				(navigator.platform.indexOf("iPhone") != -1) ||
+				(navigator.platform.indexOf("iPod") != -1)
+			);
+		}
 
 		function stopAll() {
 			stopUrl = `./stop?ra=${gRandom}`;
@@ -239,7 +252,7 @@
 					url = `./getAudio?tag=${tdata}&r=${gRandom}`;
 					stopTxt = `Stop FM ${Freq} MHz (${Program})`;
 					tempButton = `<p><a href="javascript:void(0)" data-role="button" onclick=FlipAudio() id="someButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-delete"  data-theme="c">${stopTxt}</a>`;
-					playThis = `<p><audio autoplay controls id="beep" style="max-width: 400%;"><source src="${url}" type="audio/mpeg"></audio><p>${tempButton}`;
+					playThis = `<p><audio autoplay controls id="beep" style="max-width: 400%;"><source src="${url}" type="audio/x-wav"></audio><p>${tempButton}`;
 					$("#beep").css("background-color", "lightgrey");
 					$("#player_area").html(playThis);
 					$("#princi").html(preText);
@@ -260,7 +273,7 @@
 						window.location.reload();
 						$("#blast_radius").html("");
 					});
-				} 
+				}
 			});
 		}
 
@@ -587,6 +600,8 @@
 			}
 		}
 
-		
+
+
+
 	</script>
 </body>
