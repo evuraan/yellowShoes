@@ -31,7 +31,7 @@ PS C:\temp\yellowShoes\bin> .\yellowShoes-win-amd64.exe
 yellowShoes Ver 1.08f Copyright (C) Evuraan <evuraan@gmail.com>
 This program comes with ABSOLUTELY NO WARRANTY.
 Using defaults
-Using temp dir: C:\Users\anmathew\AppData\Local\Temp, port: 8113
+Using temp dir: C:\Users\user1\AppData\Local\Temp, port: 8113
 Current Connections 0
 Current Connections 0
 Current Connections 0
