@@ -62,6 +62,9 @@ We modify the `wav` struct a little bit so it can be live streamed. Since `wav` 
 
 For example: It was observed to use about `2.2 Mbps` for a `47.1 kbps` FM broadcast. 
 
+# yellowShoes and Docker
+You can run yellowShoes inside a Docker container. See the [Docker section](./Docker). 
+
 # Screenshots 
 <img src="./Screenshots/Screenshot1.png">
 <img src='./Screenshots/join.png'>
