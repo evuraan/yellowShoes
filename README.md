@@ -64,6 +64,18 @@ For example: It was observed to use about `2.2 Mbps` for a `47.1 kbps` FM broadc
 
 # yellowShoes and Docker
 You can run yellowShoes inside a Docker container. See the [Docker section](./Docker). 
+# Routing/Proxying
+Below example is how I pegged `yellowShoes` behind Apache: 
+```bash
+<Location /hdFm/>
+ProxyPass  http://192.168.1.14:8113/
+ProxyPassReverse http://192.168.1.14:8113/
+Order deny,allow
+Allow from all
+Options -Indexes
+</Location>
+```
+This would allow `proto://myapp.dev/hdFm/main` externally. 
 
 # Screenshots 
 <img src="./Screenshots/Screenshot1.png">
@@ -80,4 +92,8 @@ You can run yellowShoes inside a Docker container. See the [Docker section](./Do
 * https://www.rtl-sdr.com/
 * https://osmocom.org/projects/rtl-sdr/wiki/Rtl-sdr
 
+# Thanks:
+* Art by Joe Winograd<br>
+<a href="http://joetut.com" rel="noreferrer" target="_blank">joetut.com</a> || <a href="http://instagram.com/joewinograd" rel="noreferrer" target="_blank" >instagram.com/joewinograd</a><br>
+(For allowing `yellowShoes` to use this wonderful [GIF](./static/wait.gif).)
  
