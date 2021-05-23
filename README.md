@@ -77,6 +77,15 @@ Options -Indexes
 ```
 This would allow `proto://myapp.dev/hdFm/main` externally. 
 
+# Optional: Build 
+If you prefer to build the binaries yourself, you will need the [Go Programming Language](https://golang.org/dl/) installed on your System. 
+
+Go into `src` folder and build as: 
+``` 
+go build
+```
+Also see the included [`make.sh`](./src/make.sh) that is used to generate binaries into `bin` folder. 
+
 # Screenshots 
 <img src="./Screenshots/Screenshot1.png">
 <img src='./Screenshots/join.png'>
