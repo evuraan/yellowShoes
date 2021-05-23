@@ -10,7 +10,7 @@ If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle
 
 # Setup 
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
-* Download `yellowShoes` to a folder. (Either clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
+* Download `yellowShoes` to a folder. (Either download the [release](https://github.com/evuraan/yellowShoes/releases), or clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
 * Go into the <a href="./bin">`bin`</a> folder, and launch the binary appropriate for your platform.
 * Launch a browser and navigate to `http://<Your_Address>:Port/main` to launch the UI. (Default port = 8113).
 
