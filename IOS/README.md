@@ -10,6 +10,9 @@ And this brings us to `lame` -  a software encoder that converts a digitized WAV
 ## Requirements
 If you wish to use Apple devices with `yellowShoes` you must setup [`lame`](https://lame.sourceforge.io/index.php) mp3 encoder on your backend. The `lame` binary must be in your `PATH`. 
 
+Without `lame`, you can still use non-IOS devices to stream.
+
+
 ## lame 
 On linux hosts, setup lame as:
 ```bash
