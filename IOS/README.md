@@ -15,7 +15,7 @@ On linux hosts, setup lame as:
 ```bash
 $ sudo apt-get install lame
 ```
-If you have another Operating Systems set up `lame` as appropriate to your environment.
+If you have another Operating System, set up `lame` as appropriate to your environment.
 
 
 
