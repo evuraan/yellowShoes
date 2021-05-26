@@ -77,7 +77,7 @@
 		changeInpBox = true;
 		errShown = false;
 		rtlTCP = "none";
-		uiVersion = `1.4c`;
+		uiVersion = `1.4d`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -99,7 +99,7 @@
 			$.get(lameCheck, function (tdata, status) {
 				if (status == "success") {
 					if (tdata.includes("No lame")) {
-						iosButton = `<a href="https://github.com/evuraan/yellowShoes/IOS" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">Using IOS Devices</a>`;
+						iosButton = `<a href="https://github.com/evuraan/yellowShoes/blob/main/IOS/README.md" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">Using IOS Devices</a>`;
 						$("#princi").html(`Please set up <b>lame mp3 encoder</b> so IOS devices can playback HD FM radio.<p>${iosButton}`);
 						$("#princi").show();
 						$("#freqSlider").hide();
