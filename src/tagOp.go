@@ -24,6 +24,15 @@ func (statusPtr *statusStruct) newClient() {
 	statusPtr.Lock()
 	defer statusPtr.Unlock()
 	statusPtr.audioConnections++
+	if statusPtr.audioConnections < 0 {
+		statusPtr.audioConnections = 1
+	}
+}
+
+func (statusPtr *statusStruct) beepBoop() {
+	statusPtr.Lock()
+	defer statusPtr.Unlock()
+	statusPtr.heartBeat = time.Now().Unix()
 }
 
 func (ourTag *tagStruct) isGone() bool {
@@ -46,7 +55,15 @@ func (ourTag *tagStruct) setGonerGone() bool {
 	return true
 }
 
+func (ourTag *tagStruct) isTagGone() bool {
+	ourTag.RLock()
+	defer ourTag.RUnlock()
+	return ourTag.goner
+}
+
 func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) {
+	go fmt.Printf("getAudio req from client %s\n", r.RemoteAddr)
+
 	w.Header().Set("Cache-Control", "max-age=0")
 	qstrings := r.URL.Query()
 	tag := qstrings.Get("tag")
@@ -63,19 +80,26 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	ourTag.RLock()
+	err := ourTag.cmdExite
+	ourTag.RUnlock()
+
+	if err != nil {
+		fmt.Fprintf(w, "Error: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		return
+	}
+	audioFile := ourTag.audioFile
 	go self.newClient()
 
-	notify := w.(http.CloseNotifier).CloseNotify()
-	go func() {
-		<-notify
+	defer func() {
+		fmt.Printf("Conn exit getAudio for %v\n", r.RemoteAddr)
 		go ourTag.setGonerGone()
 		go self.clientGone()
-		fmt.Println("Connection Gone!")
 	}()
 
-	audioFile := ourTag.audioFile
 	for i := 0; i < fileWaitConst; i++ {
-		fmt.Printf("Waiting for %s\n", audioFile)
+		fmt.Printf("getAudio: Waiting for %s\n", audioFile)
 		if getFileSize(audioFile) > 10 {
 			break
 		}
@@ -84,38 +108,35 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 		}
 		time.Sleep(1 * time.Second)
 	}
-
-	if !fixWav(audioFile) {
-		fmt.Fprintf(os.Stderr, "Error - could not tweak %s\n", audioFile)
-		w.WriteHeader(http.StatusPreconditionFailed)
-		return
+	if !ourTag.isIOS {
+		if !fixWav(audioFile) {
+			fmt.Fprintf(os.Stderr, "Error - could not tweak %s\n", audioFile)
+			w.WriteHeader(http.StatusPreconditionFailed)
+			return
+		}
+		w.Header().Set("Content-Type", "audio/x-wav")
+	} else {
+		w.Header().Set("Content-Type", "audio/mpeg")
 	}
-
 	source, err := os.Open(audioFile)
 	if err != nil {
 		fmt.Println("got err", err)
 		return
 	}
-	defer func() {
-		source.Close()
-		fmt.Printf("Exiting getAudio for client %s\n", r.RemoteAddr)
-	}()
-	w.Header().Set("Content-Type", "audio/x-wav")
-
 	var pos, delta int64
 	lastPos := pos
 	stale := 0
 	blank := 0
 	loopCount := 0
 
-	for !ourTag.goner {
+	for {
 		pos, err = source.Seek(0, 2) // Seek to End
 		if err != nil {
 			fmt.Println("Seek err", err)
 			return
 		}
 
-		if loopCount == 0 {
+		if loopCount == 0 && !ourTag.isIOS {
 			if pos > seekDelta {
 				func() {
 					vex, err := os.Open(catchup)
@@ -123,6 +144,7 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 						defer vex.Close()
 						n, err := io.Copy(w, vex)
 						if err == nil {
+							go self.beepBoop()
 							fmt.Printf("Catchup %d bytes sent\n", n)
 							loopCount++
 							lastPos = pos - seekDelta
@@ -130,6 +152,12 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 					}
 				}()
 			}
+			// else {
+			// 	var x int64 = 8192
+			// 	if pos > x {
+			// 		lastPos = pos - x
+			// 	}
+			// }
 		}
 
 		delta = pos - lastPos
@@ -148,7 +176,8 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 				fmt.Println("Copy err", err)
 				return
 			}
-			go fmt.Printf("Sent %d bytes from %d\n", n, peg)
+			go self.beepBoop()
+			go fmt.Printf("Sent %d bytes from %d to %v\n", n, peg, r.RemoteAddr)
 			blank++
 			stale = 0
 		} else {
@@ -165,8 +194,7 @@ func (statusPtr *statusStruct) getAudio(w http.ResponseWriter, r *http.Request) 
 		}
 		loopCount++
 	}
-	fmt.Fprint(w, "Connection: close\r\n\r\n")
-	return
+
 }
 
 func (statusPtr *statusStruct) getErrMsg(w http.ResponseWriter, r *http.Request) {
@@ -259,5 +287,4 @@ func (tagPtr *tagStruct) infoLoop() {
 			}
 		}
 	}
-
 }

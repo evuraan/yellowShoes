@@ -27,7 +27,7 @@ var (
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 1.08f"
+	version       = binName + " Ver 1.09b"
 	staticFs      = "../static"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
@@ -35,11 +35,13 @@ const (
 	catchup       = staticFs + "/128.wav"
 	EXTN          = "wav"
 	fileWaitConst = 42
-	connMonitor   = 5
+	connMonitor   = 7
 	tcpTimeout    = 5
 	sig           = "SIG Service:"
 	cmdWait       = 3
 	seekDelta     = 8192
+	lame          = "lame"
+	deadBeat      = 50
 )
 
 type statusStruct struct {
@@ -48,6 +50,7 @@ type statusStruct struct {
 	tagMap           map[string]*tagStruct
 	audioConnections int // connection count for audio stream
 	messages         []string
+	heartBeat        int64
 }
 
 type tagStruct struct {
@@ -63,10 +66,11 @@ type tagStruct struct {
 	infoMap      map[string]interface{}
 	serviceSigs  map[string]int
 	cmdPtr       *exec.Cmd
-	done     bool
-	goner    bool
-	cmdExite error
-	stdout   io.ReadCloser
+	done         bool
+	goner        bool
+	cmdExite     error
+	isIOS        bool
+	stdout       io.ReadCloser
 }
 
 func parseArgs() {
@@ -187,6 +191,7 @@ func main() {
 	mux.HandleFunc("/whatsGoinOn", status.getActiveTag)
 	mux.HandleFunc("/getErrMsg", status.getErrMsg)
 	mux.HandleFunc("/getVersion", getVersion)
+	mux.HandleFunc("/lameCheck", lameCheck)
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "listen err %v\n", err)
@@ -197,18 +202,27 @@ func main() {
 func (statusPtr *statusStruct) init() {
 	self := statusPtr
 	x := 0
+	var delta int64
 	for {
 		self.RLock()
 		x = self.audioConnections
+		delta = time.Now().Unix() - self.heartBeat
 		self.RUnlock()
 		fmt.Println("Current Connections", x)
-		if x == 0 {
+		if x == 0 && delta > deadBeat {
 			go self.killAll()
 		}
 		time.Sleep(connMonitor * time.Second)
 	}
 }
 
+func lameCheck(w http.ResponseWriter, r *http.Request) {
+	if checkExec(lame) {
+		fmt.Fprint(w, "OK")
+	} else {
+		fmt.Fprint(w, "No lame")
+	}
+}
 func (statusPtr *statusStruct) getActiveTag(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=0")
 
@@ -387,6 +401,7 @@ func (tagPtr *tagStruct) run() error {
 		}()
 		go func() {
 			self.cmdExite = cmd.Wait()
+			fmt.Printf("cmd %s terminated: %v\n", self.cmd, self.cmdExite)
 			status.Lock()
 			defer status.Unlock()
 			delete(status.tagMap, self.tag)

@@ -77,10 +77,13 @@
 		changeInpBox = true;
 		errShown = false;
 		rtlTCP = "none";
-		uiVersion = `1.3d`;
+		uiVersion = `1.4c`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
+
+		var lastClick = 0;
+		var delay = 2000;
 
 
 
@@ -91,13 +94,28 @@
 		}
 
 		if (isiPhone()) {
-			$("#princi").html("Not supported on IPhone and Ipods, as they do not support wave playback.");
-			$("#princi").show();
-			$("#freqSlider").hide();
-		} else {
+			playerTimeout = 98000;
+			lameCheck = `./lameCheck?rand=${gRandom}`;
+			$.get(lameCheck, function (tdata, status) {
+				if (status == "success") {
+					if (tdata.includes("No lame")) {
+						iosButton = `<a href="https://github.com/evuraan/yellowShoes/IOS" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">Using IOS Devices</a>`;
+						$("#princi").html(`Please set up <b>lame mp3 encoder</b> so IOS devices can playback HD FM radio.<p>${iosButton}`);
+						$("#princi").show();
+						$("#freqSlider").hide();
+					} else {
+						//playerTimeout = 38000;
+						showfreq();
+						supBrah();
+					}
+				}
+			});
+		} else { // not mp3, we can play wav
 			showfreq();
 			supBrah();
 		}
+
+
 		$("#freqSlider").change(function () {
 			chosenFrequency = $("#slider-1").val();
 			showfreq();
@@ -136,6 +154,10 @@
 		}
 
 		function stopAll() {
+			if (lastClick >= (Date.now() - delay)){
+				return;
+			}
+			lastClick = Date.now();
 			stopUrl = `./stop?ra=${gRandom}`;
 			$.get(stopUrl);
 		}
@@ -238,7 +260,8 @@
 			error = "";
 			window.fInterval = setInterval("playbackFailed()", playerTimeout);
 
-			$("#princi").html("Please wait..");
+			spinner = `<img src="./gif" style="width:96px;height:96px;">`;
+			$("#princi").html(`${spinner}<br>Please wait..`);
 			$("#princi").show();
 			$.get(streamUrl, function (tdata, status) {
 
@@ -249,7 +272,6 @@
 						window.error = `<p><mark>${tdata}</mark>`;
 						return;
 					}
-					spinner = `<img src="./gif" style="width:96px;height:96px;">`;
 					preText = `<p id="spinnerID">${spinner}<br>Please wait..</p>`;
 					url = `./getAudio?tag=${tdata}&r=${gRandom}`;
 					stopTxt = `Stop FM ${Freq} MHz (${Program})`;

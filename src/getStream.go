@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"net/http"
+	"os"
+	"os/exec"
 	"strings"
 	"sync"
 	"time"
@@ -48,7 +51,12 @@ func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request)
 	self.tagMap[tag] = ourNewTag
 	self.Unlock()
 
+	userAgent := r.UserAgent()
+	ourNewTag.isIOS = strings.Contains(userAgent, "iPhone") || strings.Contains(userAgent, "iPod") || strings.Contains(userAgent, "iPad") // || strings.Contains(userAgent, "Chrome")
 	ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, EXTN)
+	if ourNewTag.isIOS {
+		ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, "mp3")
+	}
 
 	ourNewTag.programIndex = "0"
 	ourNewTag.programIndex = qstrings.Get("program")
@@ -56,14 +64,7 @@ func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request)
 		ourNewTag.programIndex = "0"
 	}
 
-	ourNewTag.cmd = fmt.Sprintf("%s %s %s -o %s", nrsc5, freq, ourNewTag.programIndex, ourNewTag.audioFile)
-	if ourNewTag.rtlTcp != "none" {
-		ourNewTag.cmd = fmt.Sprintf("%s -H %s", ourNewTag.cmd, ourNewTag.rtlTcp)
-	}
-
-	if checkExec("stdbuf") {
-		ourNewTag.cmd = fmt.Sprintf("stdbuf -oL %s", ourNewTag.cmd)
-	}
+	stdbuf := checkExec("stdbuf")
 
 	wg.Wait()
 	if !rtlCheckStatus {
@@ -73,11 +74,98 @@ func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	err := ourNewTag.run()
-	if err == nil {
-		fmt.Fprintf(w, "%s", tag)
+	// push the reaper a bit away
+	go self.beepBoop()
+
+	giveTag := false
+
+	if !ourNewTag.isIOS {
+		ourNewTag.cmd = fmt.Sprintf("%s %s %s -o %s", nrsc5, freq, ourNewTag.programIndex, ourNewTag.audioFile)
+		if ourNewTag.rtlTcp != "none" {
+			ourNewTag.cmd = fmt.Sprintf("%s -H %s", ourNewTag.cmd, ourNewTag.rtlTcp)
+		}
+
+		if stdbuf {
+			ourNewTag.cmd = fmt.Sprintf("stdbuf -oL %s", ourNewTag.cmd)
+		}
+
+		err := ourNewTag.run()
+		if err == nil {
+			giveTag = true
+		} else {
+			w.WriteHeader(http.StatusBadGateway)
+		}
 	} else {
-		w.WriteHeader(http.StatusBadGateway)
+		// stdbuf -oL nrsc5 88.5 0 -H 192.168.1.134 -o - | lame - --preset insane  moha.mp3
+		if !checkExec(lame) {
+			msg := "Error: Could not find mp3 encoder\n"
+			fmt.Fprintf(os.Stderr, msg)
+			fmt.Fprint(w, msg)
+			return
+		}
+		var lhs, rhs *exec.Cmd
+		if stdbuf {
+			lhs = exec.Command("stdbuf", "-oL", nrsc5, freq, ourNewTag.programIndex, "-o", "-")
+			if ourNewTag.rtlTcp != "none" {
+				lhs = exec.Command("stdbuf", "-oL", nrsc5, freq, ourNewTag.programIndex, "-o", "-", "-H", ourNewTag.rtlTcp)
+			}
+		} else {
+			lhs = exec.Command(nrsc5, freq, ourNewTag.programIndex, "-o", "-")
+			if ourNewTag.rtlTcp != "none" {
+				lhs = exec.Command(nrsc5, freq, ourNewTag.programIndex, "-o", "-", "-H", ourNewTag.rtlTcp)
+			}
+		}
+		rhs = exec.Command("lame", "-V", "0", "-", ourNewTag.audioFile)
+		// rhs = exec.Command("lame", "--preset", "insane", "-", ourNewTag.audioFile)
+		r, wr := io.Pipe()
+		lhs.Stdout = wr
+		rhs.Stdin = r
+
+		var err error
+		ourNewTag.stdout, err = lhs.StderrPipe()
+		if err != nil {
+			fmt.Println("lhs set stdout err", err)
+			return
+		}
+
+		err = lhs.Start()
+
+		if err == nil {
+			go rhs.Run()
+			go func() {
+				status.Lock()
+				defer status.Unlock()
+				status.cmdMap[lhs] = true
+			}()
+
+			go func() {
+				ourNewTag.cmdExite = lhs.Wait()
+				fmt.Println("lhs ended:", ourNewTag.cmdExite)
+				wr.Close()
+				r.Close()
+				status.Lock()
+				defer status.Unlock()
+				delete(status.tagMap, ourNewTag.tag)
+				delete(status.tagMap, ourNewTag.freq)
+				ourNewTag.Lock()
+				ourNewTag.done = true
+				ourNewTag.Unlock()
+				os.Remove(ourNewTag.audioFile)
+			}()
+
+			go ourNewTag.infoLoop()
+			giveTag = true
+
+		} else {
+			fmt.Printf("lhs start err %v\n", err)
+			return
+		}
+
+	}
+
+	if giveTag {
+		fmt.Fprintf(w, "%s", tag)
+		go self.beepBoop()
 	}
 	return
 }
