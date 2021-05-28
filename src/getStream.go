@@ -52,7 +52,14 @@ func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request)
 	self.Unlock()
 
 	userAgent := r.UserAgent()
-	ourNewTag.isIOS = strings.Contains(userAgent, "iPhone") || strings.Contains(userAgent, "iPod") || strings.Contains(userAgent, "iPad") // || strings.Contains(userAgent, "Chrome")
+	isIOSDevice := strings.Contains(userAgent, "iPhone") || strings.Contains(userAgent, "iPod") || strings.Contains(userAgent, "iPad") // || strings.Contains(userAgent, "Chrome")
+	if isIOSDevice {
+		ourNewTag.isIOS = true
+	} else {
+		codec := qstrings.Get("format")
+		ourNewTag.isIOS = (codec == "mp3")
+	}
+
 	ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, EXTN)
 	if ourNewTag.isIOS {
 		ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, "mp3")

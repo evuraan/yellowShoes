@@ -102,6 +102,10 @@ Also see the included [`make.sh`](./src/make.sh) that is used to generate binari
 * https://www.rtl-sdr.com/
 * https://osmocom.org/projects/rtl-sdr/wiki/Rtl-sdr
 
+# Changelog 
+* 1.08f-ui-1.3d - initial release 
+* 1.09b-ui-1.4c - playback support for IOS devices 
+
 # Thanks:
 * Art by Joe Winograd<br>
 <a href="http://joetut.com" rel="noreferrer" target="_blank">joetut.com</a> || <a href="http://instagram.com/joewinograd" rel="noreferrer" target="_blank" >instagram.com/joewinograd</a><br>
