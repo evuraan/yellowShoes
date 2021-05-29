@@ -78,8 +78,8 @@
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `1.4g`;
-		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name'];
+		uiVersion = `1.5a`;
+		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
 
@@ -105,23 +105,36 @@
 		}
 
 
-		if (isiPhone()) {
-			playerTimeout = 98000;
+		hasLame = false;
+		lameChecked = false;
+		function doLameCheck(){
 			lameCheck = `./lameCheck?rand=${gRandom}`;
 			$.get(lameCheck, function (tdata, status) {
 				if (status == "success") {
-					if (tdata.includes("No lame")) {
-						iosButton = `<a href="https://github.com/evuraan/yellowShoes/blob/main/IOS/README.md" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">Using IOS Devices</a>`;
-						$("#princi").html(`Please set up <b>lame mp3 encoder</b> so IOS devices can playback HD FM radio.<p>${iosButton}`);
-						$("#princi").show();
-						$("#freqSlider").hide();
-					} else {
-						//playerTimeout = 38000;
-						showfreq();
-						supBrah();
+					lameChecked = true;
+					if (tdata.includes("OK")) {
+						hasLame = true;
 					}
 				}
 			});
+		}
+
+		doLameCheck();
+
+		if (isiPhone()) {
+			playerTimeout = 98000;
+			if (!lameChecked){
+				doLameCheck();
+			}
+			if (hasLame){
+				showfreq();
+				supBrah();
+			} else {
+				iosButton = `<a href="https://github.com/evuraan/yellowShoes/blob/main/IOS/README.md" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">Using IOS Devices</a>`;
+				("#princi").html(`Please set up <b>lame mp3 encoder</b> so IOS devices can playback HD FM radio.<p>${iosButton}`);
+				$("#princi").show();
+				$("#freqSlider").hide();
+			}
 		} else { // not mp3, we can play wav
 			showfreq();
 			supBrah();
@@ -536,17 +549,21 @@
 				speechGyan = `<p>For an optimal listening experience, choose wav format. Beware, wav format is uncompressed so you need to have a good data connection. Especially when it comes to playback on Mobile Devices.`
 				codec = `Current Format: ${localStorage.streamingFormat}<p>${mp3Button} ${wavButton}${speechGyan}`;
 					
-                                $("#settings_princi").html(codec);
-                                $("#settings_princi").show();
+				if (hasLame){
+					$("#settings_princi").html(codec);
+					$("#settings_princi").show();
 
-				if (localStorage.streamingFormat == "mp3"){
-					$("#mp3ButtonID").css("background-color", "green");
+					if (localStorage.streamingFormat == "mp3"){
+						$("#mp3ButtonID").css("background-color", "green");
+					} else {
+						$("#wavButtonID").css("background-color", "green");
+					}
 				} else {
-					console.log("lightGreen");
-					$("#wavButtonID").css("background-color", "green");
+					iosButton = `<a href="https://github.com/evuraan/yellowShoes/blob/main/IOS/README.md" data-role="button" id="gitHubBId" rel="external" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all ui-icon-info"  data-theme="c">mp3 encoder</a>`;
+					codec = `no mp3 encoder found, only wav format supported.<p>${iosButton}`; 
+					$("#settings_princi").html(codec);
+					$("#settings_princi").show();
 				}
-
-
 			}
 		}
 

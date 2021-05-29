@@ -225,6 +225,10 @@ func (statusPtr *statusStruct) getInfo(w http.ResponseWriter, r *http.Request) {
 	ourTag.infoMap["SIGCT"] = len(ourTag.serviceSigs)
 	ourTag.infoMap["freq"] = ourTag.freq
 	ourTag.infoMap["programIndex"] = ourTag.programIndex
+	ourTag.infoMap["Format"] = "wav"
+	if ourTag.isIOS {
+		ourTag.infoMap["Format"] = "mp3"
+	}
 	data, err := json.Marshal(ourTag.infoMap)
 	ourTag.Unlock()
 
