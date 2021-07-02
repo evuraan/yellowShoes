@@ -1,8 +1,8 @@
 #!/bin/bash 
 
 
+tgz="/tmp/yellowShoes-$(date +%F)-$RANDOM.tgz"
 mkdir ../bin
-
 
 set -e 
 
@@ -18,3 +18,7 @@ GOOS=linux GOARCH=386 go build -o ../bin/yellowShoes-linux-386
 cd ../bin
 md5sum yell* > md5sum.txt
 echo "#Generated: $(date)" >> md5sum.txt
+
+cd ../../
+tar -cvzf $tgz yellowShoes/static/ yellowShoes/bin  
+echo "Tar file: $tgz"
