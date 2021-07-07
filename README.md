@@ -94,11 +94,6 @@ Also see the included [`make.sh`](./src/make.sh) that is used to generate binari
 <img src='./Screenshots/Settings.png'>
 <img src='./Screenshots/OnError.png'>
 
-# Donate 
-[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WTUV64BF3TLW2)
-<p>Thank you for donating. Your donations will be used to maintain this project.
-
-
 # Changelog 
 * 1.08f-ui-1.3d - initial release 
 * 1.09b-ui-1.4c - playback support for IOS devices 
