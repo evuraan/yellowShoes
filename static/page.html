@@ -83,7 +83,7 @@
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `1.5f`;
+		uiVersion = `1.5g`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -538,7 +538,7 @@
 			$("#settings_princi").show();
 			aboutUrl = `./getVersion?ran=${gRandom}`
 			donateButton = `<br><a href="javascript:void(0)" id="contiB" onclick=donate() class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Donate</a>`;
-			siteButton = `<a href="https://evuraan.info/yellowShoes/" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">yellowShoes</a>`;
+			siteButton = `<a href="https://evuraan.info/yellowShoes/" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" rel="external" data-role="button" data-theme="b">yellowShoes</a>`;
 			$.get(aboutUrl, function (data) {
 				backEnd = `<p id="backEndId">Server Version: ${data}</p>`;
 				tempSjow = `<p><pre>UI Version: ${uiVersion}<br>Server Version: ${data}</pre></p>${siteButton}${donateButton}`;
