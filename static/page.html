@@ -54,13 +54,15 @@
 			<h1 id="h1id">yellowShoes</h1>nrsc5 radio player (HD FM Radio)<br>
 			<span id="advanced_menu">
 				<a href="javascript:void(0)" data-role="button" onclick=toRTLTCPSettings()
-					data-theme="b">rtltcp-host</a>
-				<a href="javascript:void(0)" data-role="button" onclick=stopAllSessions() data-theme="b">Manage
-					Sessions</a>
+					data-theme="b">Set rtltcp-host</a>
+				<a href="javascript:void(0)" data-role="button" onclick=toPlayerTimeoutSettings()
+					data-theme="b">Set playerTimeout</a>
 				<a href="javascript:void(0)" data-role="button" onclick=manageBooks() data-theme="b">Manage
 					Bookmarks</a>
 				<a href="javascript:void(0)" data-role="button" onclick=manageStreamingFormat() data-theme="b">Streaming
 					Format</a>
+				<a href="javascript:void(0)" data-role="button" onclick=stopAllSessions() data-theme="b">Manage
+					Sessions</a>
 				<a href="javascript:void(0)" data-role="button" onclick=about() data-theme="b">About</a>
 			</span>
 			<p id="settings_princi"></p>
@@ -74,13 +76,14 @@
 	<script>
 		var chosenFrequency = 88.5;
 		gRandom = Math.random().toString(36).substr(2, 5);
-		playerTimeout = 18000;
+		playerTimeout = 30000;
+		minTimeOut = 18000;
 		blastInterval = 3000;
 		changeInpBox = true;
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `1.5d`;
+		uiVersion = `1.5f`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -88,6 +91,11 @@
 		var lastClick = 0;
 		var delay = 2000;
 
+		if (localStorage && 'playerTimeout' in localStorage) {
+			playerTimeout = localStorage.playerTimeout;
+		} else {
+			localStorage.playerTimeout = playerTimeout;
+		}
 
 
 		if (localStorage && 'rtlTCP' in localStorage) {
@@ -124,7 +132,7 @@
 		doLameCheck();
 
 		if (isiPhone()) {
-			playerTimeout = 98000;
+			playerTimeout += 80000;
 			if (!lameChecked) {
 				doLameCheck();
 			}
@@ -529,10 +537,11 @@
 			// $("#settings_princi").html(`${abtButton}<p id="uiVerid">UI Version: ${uiVersion}</p>`);
 			$("#settings_princi").show();
 			aboutUrl = `./getVersion?ran=${gRandom}`
-			donateButton = `<p><a href="javascript:void(0)" id="contiB" onclick=donate() class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Donate</a>`;
+			donateButton = `<br><a href="javascript:void(0)" id="contiB" onclick=donate() class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Donate</a>`;
+			siteButton = `<a href="https://evuraan.info/yellowShoes/" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">yellowShoes</a>`;
 			$.get(aboutUrl, function (data) {
 				backEnd = `<p id="backEndId">Server Version: ${data}</p>`;
-				tempSjow = `<p><pre>UI Version: ${uiVersion}<br>Server Version: ${data}</pre></p>${donateButton}`;
+				tempSjow = `<p><pre>UI Version: ${uiVersion}<br>Server Version: ${data}</pre></p>${siteButton}${donateButton}`;
 				$("#settings_princi").html(tempSjow)
 			});
 
@@ -559,7 +568,7 @@
 			} else {
 				mp3Button = `<a href="javascript:void(0)" data-role="button" onclick="selectCodec('mp3')" id="mp3ButtonID" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all"  data-theme="c">mp3</a>`;
 				wavButton = `<a href="javascript:void(0)" data-role="button" onclick="selectCodec('wav')" id="wavButtonID" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all"  data-theme="c">wav</a>`;
-				speechGyan = `<p>For an optimal listening experience, choose wav format. Beware, wav format is uncompressed so you need to have a good data connection. Especially when it comes to playback on Mobile Devices.`
+				speechGyan = `<p>For an optimal listening experience, choose wav format. Please note though, wav format is uncompressed so you need to have a good data connection.`
 				codec = `Current Format: ${localStorage.streamingFormat}<p>${mp3Button} ${wavButton}${speechGyan}`;
 
 				if (hasLame) {
@@ -636,15 +645,7 @@
 			ontoBookmarks();
 		}
 
-		function toRTLTCPSettings() {
-
-			$("#advanced_menu").hide();
-			tcpOK = `<p><a href="javascript:void(0)" data-role="button" onclick=setRTLTCP() id="tcpOKButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-check"  data-theme="c">Apply</a>`;
-			tcpCancel = `<a href="javascript:void(0)" data-role="button" onclick=window.location.reload() id="tcpCancelButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-delete"  data-theme="c">Cancel</a>`;
-
-			settingsHtml = `<p id="tcpId"><b>rtltcp-host</b>: <small>${window.rtlTCP}</small><p id="rtlExample">Examples:<pre>192.168.1.1:1234<br>127.0.0.1<br>none</pre></p><div contenteditable="true" id="myInput">${rtlTCP}</div></p>${tcpOK}${tcpCancel}`;
-			$("#settings_princi").html(settingsHtml);
-			$("#settings_princi").show();
+		function myInputPrep(){
 			$("#myInput").css({
 				"font-size": "16px", "height": "100%",
 				"width": "70%",
@@ -652,7 +653,8 @@
 				"border-radius": "4px",
 				"border": "2px solid #ccc"
 			});
-
+		}
+		function myInputChange(){
 			$("#myInput").on("click", function (event) {
 				if (changeInpBox) {
 					changeInpBox = false;
@@ -668,6 +670,56 @@
 					changeInput();
 				}
 			});
+		}
+
+		function setPlayerTimeout() {
+			contButton = `<p><a href="javascript:void(0)" id="cinreloadButton" onclick="location.href='./main';" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Continue</a>`
+
+			x = $("#myInput").text();
+			if (x.length == 0) {
+				$("#settings_princi").html(`Invalid Entry.`);
+				return
+			}
+			if (isNaN(x)){
+				$("#settings_princi").html(`Invalid Entry.`);
+				return 
+			}
+
+			tmo = parseInt(x);
+			
+			if (tmo > minTimeOut){
+				localStorage.playerTimeout = tmo;
+				window.playerTimeout = tmo;
+				$("#settings_princi").html(`<b>playerTimeout</b>: New Value: ${tmo}${contButton}`);
+			} else {
+				$("#settings_princi").html(`Too low, must be greater than ${minTimeOut}.`);
+				return 
+			}
+		}
+
+		function toPlayerTimeoutSettings(){
+			$("#advanced_menu").hide();
+			desc = `<p><b>playerTimeout:</b> milliseconds to wait for playback<br><b>Minimum:</b> ${minTimeOut}<br><b>Description</b>: Increase <small>playerTimeout</small> if your SDR device needs more time.`;
+			timeoutOKBtn = `<p><a href="javascript:void(0)" data-role="button" onclick=setPlayerTimeout() id="timeOOK" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-check"  data-theme="c">Apply</a>`;
+			cancelBtn = `<a href="javascript:void(0)" id="cinreloadButton" onclick="location.href='./main';" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Cancel</a>`
+			msg = `${desc}<p id="timeOID">Current: ${playerTimeout}</p>Enter new wait time:<br><div contenteditable="true" id="myInput">${playerTimeout}</div></p>${timeoutOKBtn}${cancelBtn}`
+			$("#settings_princi").html(msg);
+			$("#settings_princi").show();
+			myInputPrep();
+			myInputChange();
+		}
+	
+		function toRTLTCPSettings() {
+
+			$("#advanced_menu").hide();
+			tcpOK = `<p><a href="javascript:void(0)" data-role="button" onclick=setRTLTCP() id="tcpOKButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-check"  data-theme="c">Apply</a>`;
+			tcpCancel = `<a href="javascript:void(0)" data-role="button" onclick=window.location.reload() id="tcpCancelButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-delete"  data-theme="c">Cancel</a>`;
+
+			settingsHtml = `<p id="tcpId"><b>rtltcp-host</b>: <small>${window.rtlTCP}</small><p id="rtlExample">Examples:<pre>192.168.1.1:1234<br>127.0.0.1<br>none</pre></p><div contenteditable="true" id="myInput">${rtlTCP}</div></p>${tcpOK}${tcpCancel}`;
+			$("#settings_princi").html(settingsHtml);
+			$("#settings_princi").show();
+			myInputPrep();
+			myInputChange(); 
 		}
 
 		function changeInput() {
