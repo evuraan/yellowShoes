@@ -53,10 +53,10 @@
 			<img src="./favicon.ico" width="20" height="20">
 			<h1 id="h1id">yellowShoes</h1>nrsc5 radio player (HD FM Radio)<br>
 			<span id="advanced_menu">
-				<a href="javascript:void(0)" data-role="button" onclick=toRTLTCPSettings()
-					data-theme="b">Set rtltcp-host</a>
-				<a href="javascript:void(0)" data-role="button" onclick=toPlayerTimeoutSettings()
-					data-theme="b">Set playerTimeout</a>
+				<a href="javascript:void(0)" data-role="button" onclick=toRTLTCPSettings() data-theme="b">Set
+					rtltcp-host</a>
+				<a href="javascript:void(0)" data-role="button" onclick=toPlayerTimeoutSettings() data-theme="b">Set
+					playerTimeout</a>
 				<a href="javascript:void(0)" data-role="button" onclick=manageBooks() data-theme="b">Manage
 					Bookmarks</a>
 				<a href="javascript:void(0)" data-role="button" onclick=manageStreamingFormat() data-theme="b">Streaming
@@ -83,10 +83,11 @@
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `1.5g`;
+		uiVersion = `1.5h`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
+		playingBool = false;
 
 		var lastClick = 0;
 		var delay = 2000;
@@ -195,7 +196,10 @@
 			lastClick = Date.now();
 			stopUrl = `./stop?ra=${gRandom}`;
 			$.get(stopUrl);
+			playingBool = false;
+			setTitle();
 		}
+
 		function showfreq() {
 			x = parseFloat(chosenFrequency);
 			y = `${x.toFixed(1)} MHz`;
@@ -268,6 +272,7 @@
 					}
 				}
 			});
+			setTitle();
 		}
 
 		function addBookMark(blah) {
@@ -327,13 +332,39 @@
 						$("#princi").hide();
 						$("#player_area").show();
 						$("#someButton").css("background-color", "red");
+						playingBool = true;
+						setTitle()
 					});
 					media.addEventListener('ended', (event) => {
 						window.location.reload();
 						$("#blast_radius").html("");
+						playingBool = false;
+						setTitle()
 					});
 				}
 			});
+		}
+
+		function setTitle() {
+			newTitle = "";
+			if (playingBool) {
+				if (window.breeze != undefined) {
+					if (window.breeze.Artist != undefined) {
+						newTitle = `${newTitle}${window.breeze.Artist}:`
+					}
+					if (window.breeze["Title"] != undefined) {
+						newTitle = `${newTitle} ${window.breeze["Title"]}`
+					}
+					if (window.breeze["Station name"] != undefined) {
+						newTitle = `${newTitle} (${window.breeze["Station name"]})`;
+					}
+				}
+			}
+			if (newTitle.length > 0) {
+				document.title = newTitle
+			} else {
+				document.title = "yellowShoes"
+			}
 		}
 
 		function playAudio() {
@@ -374,9 +405,13 @@
 				$("#princi").hide();
 				$("#player_area").show();
 				$("#someButton").css("background-color", "red");
+				playingBool = true;
+				setTitle();
 			});
 			media.addEventListener('ended', (event) => {
 				window.location.reload();
+				playingBool = false;
+				setTitle()
 			});
 		}
 
@@ -645,7 +680,7 @@
 			ontoBookmarks();
 		}
 
-		function myInputPrep(){
+		function myInputPrep() {
 			$("#myInput").css({
 				"font-size": "16px", "height": "100%",
 				"width": "70%",
@@ -654,7 +689,7 @@
 				"border": "2px solid #ccc"
 			});
 		}
-		function myInputChange(){
+		function myInputChange() {
 			$("#myInput").on("click", function (event) {
 				if (changeInpBox) {
 					changeInpBox = false;
@@ -680,24 +715,24 @@
 				$("#settings_princi").html(`Invalid Entry.`);
 				return
 			}
-			if (isNaN(x)){
+			if (isNaN(x)) {
 				$("#settings_princi").html(`Invalid Entry.`);
-				return 
+				return
 			}
 
 			tmo = parseInt(x);
-			
-			if (tmo > minTimeOut){
+
+			if (tmo > minTimeOut) {
 				localStorage.playerTimeout = tmo;
 				window.playerTimeout = tmo;
 				$("#settings_princi").html(`<b>playerTimeout</b>: New Value: ${tmo}${contButton}`);
 			} else {
 				$("#settings_princi").html(`Too low, must be greater than ${minTimeOut}.`);
-				return 
+				return
 			}
 		}
 
-		function toPlayerTimeoutSettings(){
+		function toPlayerTimeoutSettings() {
 			$("#advanced_menu").hide();
 			desc = `<p><b>playerTimeout:</b> milliseconds to wait for playback<br><b>Minimum:</b> ${minTimeOut}<br><b>Description</b>: Increase <small>playerTimeout</small> if your SDR device needs more time.`;
 			timeoutOKBtn = `<p><a href="javascript:void(0)" data-role="button" onclick=setPlayerTimeout() id="timeOOK" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-check"  data-theme="c">Apply</a>`;
@@ -708,7 +743,7 @@
 			myInputPrep();
 			myInputChange();
 		}
-	
+
 		function toRTLTCPSettings() {
 
 			$("#advanced_menu").hide();
@@ -719,7 +754,7 @@
 			$("#settings_princi").html(settingsHtml);
 			$("#settings_princi").show();
 			myInputPrep();
-			myInputChange(); 
+			myInputChange();
 		}
 
 		function changeInput() {
