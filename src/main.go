@@ -27,7 +27,7 @@ var (
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 1.09d"
+	version       = binName + " Ver 1.09e"
 	staticFs      = "../static"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
@@ -192,6 +192,8 @@ func main() {
 	mux.HandleFunc("/getErrMsg", status.getErrMsg)
 	mux.HandleFunc("/getVersion", getVersion)
 	mux.HandleFunc("/lameCheck", lameCheck)
+	mux.HandleFunc("/valBookMark", validateBookmark)
+
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "listen err %v\n", err)
@@ -417,4 +419,101 @@ func (tagPtr *tagStruct) run() error {
 	}
 
 	return err
+}
+
+//bFreq=88.1&bProg=0&bukName=Samtha+Add+a+program+bookmark
+func validateBookmark(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age=0")
+	bFreq := r.FormValue("bFreq")
+	bukName := r.FormValue("bukName")
+	bProg := r.FormValue("bProg")
+
+	returnThis := make(map[string]interface{})
+	returnThis["status"] = false
+
+	defer func() {
+		info, err := json.Marshal(returnThis)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(info)
+	}()
+
+	if len(bFreq) < 1 || len(bukName) < 1 || len(bProg) < 1 {
+		return
+	}
+
+	if !validateFreq(bFreq) {
+		return
+	}
+	if !validateBookName(bukName) {
+		return
+	}
+	if !validateProg(bProg) {
+		return
+	}
+	returnThis["status"] = true
+	returnThis["bFreq"] = bFreq
+	returnThis["Prog"] = bProg
+	returnThis["bukName"] = bukName
+	return
+}
+
+func checkErr(err error) {
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Err: %v\n", err)
+	}
+}
+
+func validateFreq(someFreq string) (ok bool) {
+	if len(someFreq) < 1 {
+		return
+	}
+	floatFreq, err := strconv.ParseFloat(someFreq, 64)
+	if err != nil {
+		checkErr(err)
+		return
+	}
+
+	// min="88.0" max="108.0"
+	if floatFreq < 88.0 {
+		return
+	}
+
+	if floatFreq > 108.0 {
+		return
+	}
+
+	return true
+}
+
+func validateProg(someProg string) (ok bool) {
+	if len(someProg) < 1 {
+		return
+	}
+	const progAllowed = "0123456789"
+	for i := range someProg {
+		char := fmt.Sprintf("%c", someProg[i])
+		if !strings.Contains(progAllowed, char) {
+			return
+		}
+
+	}
+	return true
+}
+
+func validateBookName(someName string) (ok bool) {
+	if len(someName) < 1 {
+		return
+	}
+	const bookDeny = "<>|;"
+	for i := range someName {
+		char := fmt.Sprintf("%c", someName[i])
+		if strings.Contains(bookDeny, char) {
+			return
+		}
+	}
+	return true
 }

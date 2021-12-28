@@ -23,10 +23,10 @@ func (statusPtr *statusStruct) clientGone() {
 func (statusPtr *statusStruct) newClient() {
 	statusPtr.Lock()
 	defer statusPtr.Unlock()
-	statusPtr.audioConnections++
 	if statusPtr.audioConnections < 0 {
-		statusPtr.audioConnections = 1
+		statusPtr.audioConnections = 0
 	}
+	statusPtr.audioConnections++
 }
 
 func (statusPtr *statusStruct) beepBoop() {
