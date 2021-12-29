@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"math/rand"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -27,7 +28,7 @@ var (
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 1.09e"
+	version       = binName + " Ver 2.0a"
 	staticFs      = "../static"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
@@ -193,6 +194,8 @@ func main() {
 	mux.HandleFunc("/getVersion", getVersion)
 	mux.HandleFunc("/lameCheck", lameCheck)
 	mux.HandleFunc("/valBookMark", validateBookmark)
+	mux.HandleFunc("/checkSettings", checkSettings)
+	mux.HandleFunc("/import", doImport)
 
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
@@ -421,6 +424,175 @@ func (tagPtr *tagStruct) run() error {
 	return err
 }
 
+func doImport(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age=0")
+	jewels := make(map[string]interface{})
+	jewels["status"] = false
+
+	defer func() {
+		info, err := json.Marshal(jewels)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(info)
+	}()
+
+	laceKey := r.FormValue("laceKey")
+
+	if len(laceKey) < 1 {
+		return
+	}
+
+	laceFile := fmt.Sprintf("%s/%s.lace", tmpDir, laceKey)
+	f, err := os.Open(laceFile)
+	if err != nil {
+		checkErr(err)
+		return
+	}
+	defer f.Close()
+	enc := json.NewDecoder(f)
+	err = enc.Decode(&jewels)
+	if err != nil {
+		checkErr(err)
+		return
+	}
+	jewels["status"] = true
+	return
+}
+
+func checkSettings(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age=0")
+
+	swoop := make(map[string]interface{})
+	jewels := make(map[string]interface{})
+	succeeded := false
+
+	defer func() {
+		info, err := json.Marshal(jewels)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(info)
+	}()
+
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		checkErr(err)
+		return
+	}
+	err = json.Unmarshal(body, &swoop)
+	if err != nil {
+		fmt.Println("shit failed!")
+		checkErr(err)
+		return
+	}
+	for i := range swoop {
+		key := i
+		val := fmt.Sprintf("%v", swoop[key])
+		switch {
+		case key == "rtlTCP":
+			if len(val) < 1 {
+				jewels["err"] = "rtlTCP validation failed"
+				return
+			}
+			if val == "none" {
+				jewels[key] = val
+				continue
+			}
+			rtlInfo := val
+			splat := strings.Split(val, ":")
+			if len(splat) < 2 {
+				rtlInfo += ":1234"
+			}
+			if !portCheck(rtlInfo) {
+				succeeded = false
+				jewels["err"] = "rtlTCP validation failed: " + rtlInfo
+			} else {
+				jewels[key] = rtlInfo
+			}
+			continue
+		case key == "playerTimeout":
+			_, err := strconv.Atoi(val)
+			if err != nil {
+				succeeded = false
+				checkErr(err)
+				jewels["err"] = "playerTimeout validation failed"
+				return
+			}
+			jewels[key] = val
+			continue
+		case key == "streamingFormat":
+			if val == "wav" || val == "mp3" {
+				jewels[key] = val
+			} else {
+				succeeded = false
+				jewels["err"] = "streamingFormat validation failed: " + val
+				return
+			}
+			continue
+
+		case key[:5] == "freq=":
+			//freq=88.5&program=0":"KNKX 88.5 Mambo Inn 0",
+			splat := strings.Split(key, "&")
+			if len(splat) < 2 {
+				jewels["err"] = "freq validation failed"
+				return
+			}
+			fre := strings.ReplaceAll(splat[0], "freq=", "")
+			if !validateFreq(fre) {
+				jewels["err"] = "freq validation failed"
+				return
+			}
+			prog := strings.ReplaceAll(splat[1], "program=", "")
+			if !validateProg(prog) {
+				jewels["err"] = "program validation failed"
+				return
+			}
+			if !validateBookName(val) {
+				jewels["err"] = "Bookmark name validation failed"
+				return
+			}
+			jewels[key] = val
+			continue
+		}
+	}
+
+	_, errExists := jewels["err"]
+	if errExists {
+		succeeded = false
+		jewels["status"] = false
+		return
+	} else {
+		jewels["status"] = true
+		succeeded = true
+	}
+
+	if succeeded {
+		lace := nibble(6)
+		laceFile := fmt.Sprintf("%s/%s.lace", tmpDir, lace)
+		f, err := os.Create(laceFile)
+		if err != nil {
+			checkErr(err)
+			return
+		}
+		defer f.Close()
+		enc := json.NewEncoder(f)
+		err = enc.Encode(swoop)
+		if err != nil {
+			checkErr(err)
+			return
+		}
+
+		jewels["lace"] = lace
+	}
+
+	return
+}
+
 //bFreq=88.1&bProg=0&bukName=Samtha+Add+a+program+bookmark
 func validateBookmark(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=0")
@@ -477,12 +649,15 @@ func validateFreq(someFreq string) (ok bool) {
 		return
 	}
 
+	err = fmt.Errorf("Frequency %v failed validation\n", someFreq)
 	// min="88.0" max="108.0"
 	if floatFreq < 88.0 {
+		checkErr(err)
 		return
 	}
 
 	if floatFreq > 108.0 {
+		checkErr(err)
 		return
 	}
 
@@ -497,6 +672,8 @@ func validateProg(someProg string) (ok bool) {
 	for i := range someProg {
 		char := fmt.Sprintf("%c", someProg[i])
 		if !strings.Contains(progAllowed, char) {
+			err := fmt.Errorf("Program Number %s failed validation\n", someProg)
+			go checkErr(err)
 			return
 		}
 
@@ -512,8 +689,23 @@ func validateBookName(someName string) (ok bool) {
 	for i := range someName {
 		char := fmt.Sprintf("%c", someName[i])
 		if strings.Contains(bookDeny, char) {
+			err := fmt.Errorf("Bookmark Name %s failed validation\n", someName)
+			go checkErr(err)
 			return
 		}
 	}
 	return true
+}
+
+func portCheck(device string) (ok bool) {
+	if len(device) < 1 {
+		return
+	}
+	conn, err := net.DialTimeout("tcp", device, tcpTimeout*time.Second)
+	if err != nil {
+		checkErr(err)
+		return
+	}
+	defer conn.Close()
+	return err == nil
 }

@@ -97,7 +97,7 @@ Also see the included [`make.sh`](./src/make.sh) that is used to generate binari
 # Changelog 
 * 1.08f-ui-1.3d - initial release 
 * 1.09b-ui-1.4c - playback support for IOS devices 
-
+* 2.0a-ui-2.0a - All feature requests from https://github.com/evuraan/yellowShoes/issues/3: sync between devices/browsers, update title with the current station name and artist/title info,  manual entry of bookmarks without needing to have them tuned beforehand. 
 
 # References
 * https://github.com/markjfine/nrsc5-dui

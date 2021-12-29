@@ -51,7 +51,8 @@
 	<section id="settings" data-role="page" data-title="yellowShoes">
 		<div class="ui-content" role="main">
 			<img src="./favicon.ico" width="20" height="20">
-			<h1 id="h1id">yellowShoes</h1>nrsc5 radio player (HD FM Radio)<br>
+			<h1 id="h1id">yellowShoes</h1>
+			<p id="nset">nrsc5 radio player (HD FM Radio)</p>
 			<span id="advanced_menu">
 				<a href="javascript:void(0)" data-role="button" onclick=toRTLTCPSettings() data-theme="b">Set
 					rtltcp-host</a>
@@ -63,6 +64,10 @@
 					Format</a>
 				<a href="javascript:void(0)" data-role="button" onclick=stopAllSessions() data-theme="b">Manage
 					Sessions</a>
+				<a href="javascript:void(0)" data-role="button" onclick=exportSettings() data-theme="b">Export
+					Settings</a>
+				<a href="javascript:void(0)" data-role="button" onclick=importSettings() data-theme="b">Import Settings
+					and Bookmarks</a>
 				<a href="javascript:void(0)" data-role="button" onclick=about() data-theme="b">About</a>
 			</span>
 			<p id="settings_princi"></p>
@@ -75,13 +80,14 @@
 		<div class="ui-content" role="main">
 			<img src="./favicon.ico" width="20" height="20">
 			<h1 id="h1idBm">yellowShoes</h1>
-			<p id="snowPlay">Add a program bookmark<p>
+			<p id="snowPlay">Add a program bookmark
+			<p>
 				<span id="addBlo">
 					<form id="addBID">
-						<input type="number" step="0.01" id="addFreq" placeholder="Frequency, e.g.: 88.5" required name="bFreq">
+						<input type="number" step="0.01" id="addFreq" placeholder="Frequency, e.g.: 88.5" required
+							name="bFreq">
 						<input type="number" id="bgProgaa" placeholder="Program ID, e.g.: 0" required name="bProg">
-						<input type="text" id="bgProgaa"
-							placeholder="Description, e.g.: Awesome Christmas Music"
+						<input type="text" id="bgProgaa" placeholder="Description, e.g.: Awesome Christmas Music"
 							required name="bukName">
 						<input class="btn btn-primary" type="submit" name="submit" value="Add Bookmark" />
 					</form>
@@ -102,7 +108,7 @@
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `1.6a`;
+		uiVersion = `2.0a`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -601,6 +607,54 @@
 
 		}
 
+		function exportSettings() {
+			$("#advanced_menu").hide();
+			$("#settings_princi").html("");
+			$("#nset").hide();
+			var mySettings = {};
+			// streamingFormat, playerTimeout, rtlTCP
+			for (var i = 0; i < localStorage.length; i++) {
+				taba = localStorage.key(i);
+				if (taba.includes("freq=") && taba.includes("program=")) {
+					mySettings[taba] = localStorage.getItem(taba)
+					continue
+				} else if (taba == "rtlTCP") {
+					mySettings[taba] = localStorage.getItem(taba)
+					continue
+				} else if (taba == "playerTimeout") {
+					mySettings[taba] = localStorage.getItem(taba)
+					continue
+				} else if (taba == "streamingFormat") {
+					mySettings[taba] = localStorage.getItem(taba)
+					continue
+				}
+			}
+			if (Object.keys(mySettings).length < 1) {
+				$("#settings_princi").html("Error 33.1 - no settings found!");
+				$("#settings_princi").show();
+				return
+			}
+
+			checkJurl = `./checkSettings?token=${gRandom}`;
+			$("#addBID").hide();
+			$("#snowPlay").hide();
+			$("#settings_princi").html("Please wait..");
+			$("#settings_princi").show();
+
+			$.post(checkJurl, JSON.stringify(mySettings), function (tdata, status) {
+				if (tdata.status) {
+					delete (tdata["status"]);
+					cr08 = `Sync settings and bookmarks across your devices/browsers<p>`
+					thak = `${cr08} Lace key to import artifacts to your device: <mark>${tdata.lace}</mark>`;
+					$("#settings_princi").html(thak);
+				} else {
+					$("#settings_princi").html(`Err 55.1: Unable to generate Lace Key.<p> ${tdata.err}`);
+				}
+				$("#settings_princi").show();
+			});
+		}
+
+
 		function manageBooks() {
 			$("#advanced_menu").hide();
 			$("#settings_princi").html("");
@@ -763,6 +817,49 @@
 			myInputPrep();
 			myInputChange();
 		}
+		function importSettings() {
+			$("#advanced_menu").hide();
+			$("#nset").hide();
+			desc = `<p>Keep your bookmarks and settings synchronized across your devices.</p>`
+			applyBtn = `<p><a href="javascript:void(0)" data-role="button" onclick=doImpo() id="impID" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-check"  data-theme="c">Apply</a>`;
+			cancelBtn = `<a href="javascript:void(0)" id="cinretariKiButton" onclick="location.href='./main';" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Cancel</a>`
+			msg = `${desc}<p id="timeOID">Enter config (Lace) key:<div contenteditable="true" id="myInput">LaceKey</div></p>${applyBtn}${cancelBtn}`
+			$("#settings_princi").html(msg);
+			$("#settings_princi").show();
+			myInputPrep();
+			myInputChange();
+		}
+
+		function doImpo() {
+			contButton = `<p><a href="javascript:void(0)" id="cinreloadButton" onclick="location.href='./main';" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Continue</a>`
+			x = $("#myInput").text();
+			if (x.length == 0) {
+				$("#settings_princi").html(`Invalid Entry.1`);
+				return
+			}
+
+			payload = { "laceKey": x };
+			laceUrl = `./import?token=${gRandom}`;
+			$.post(laceUrl, payload, function (tdata, status) {
+
+				if (tdata.status) {
+					delete (tdata["status"]);
+					i = 0;
+					for (x of Object.keys(tdata)) {
+						newVal = tdata[x];
+						localStorage.setItem(x, newVal);
+						i++
+					}
+					if (i > 0) {
+						$("#settings_princi").html(`Imported ${i} artifacts to this device.`);
+					} else {
+						$("#settings_princi").html(`Failed to import artifacts to this device.`);
+						return;
+					}
+				}
+			});
+
+		}
 
 		function toRTLTCPSettings() {
 
@@ -825,8 +922,8 @@
 					$("#tuu").html(`<b>Error:</b> Validation failed`);
 					return;
 				}
-				someKey=`freq=${tdata.bFreq}&program=${tdata.Prog}`;
-				if (someKey in localStorage){
+				someKey = `freq=${tdata.bFreq}&program=${tdata.Prog}`;
+				if (someKey in localStorage) {
 					$("#tuu").html(`Bookmark already exists`)
 				} else {
 					localStorage.setItem(someKey, tdata.bukName);

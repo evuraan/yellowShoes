@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 	"sync"
-	"time"
 )
 
 func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request) {
@@ -193,12 +191,6 @@ func checkRTL(rtlInfo string, wg *sync.WaitGroup, rtlCheckStatusPtr *bool) bool 
 	if len(splat) < 2 {
 		rtlInfo += ":1234"
 	}
-	conn, err := net.DialTimeout("tcp", rtlInfo, tcpTimeout*time.Second)
-	if err != nil {
-		return false
-	}
-	defer conn.Close()
-	x := (err == nil)
-	*rtlCheckStatusPtr = x
-	return x
+
+	return portCheck(rtlInfo)
 }
