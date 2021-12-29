@@ -192,5 +192,7 @@ func checkRTL(rtlInfo string, wg *sync.WaitGroup, rtlCheckStatusPtr *bool) bool 
 		rtlInfo += ":1234"
 	}
 
-	return portCheck(rtlInfo)
+	x := portCheck(rtlInfo)
+	*rtlCheckStatusPtr = x
+	return x
 }
