@@ -856,6 +856,8 @@
 						$("#settings_princi").html(`Failed to import artifacts to this device.`);
 						return;
 					}
+				} else {
+					$("#settings_princi").html(`Err: 44.1 - Import failed.<p>Is <mark>${x}</mark> valid?`);
 				}
 			});
 
