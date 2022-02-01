@@ -108,7 +108,7 @@
 		errShown = false;
 		rtlTCP = "none";
 		streamingFormat = "wav";
-		uiVersion = `2.0a`;
+		uiVersion = `2.1b`;
 		showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 		error = "";
 		bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -158,7 +158,7 @@
 		doLameCheck();
 
 		if (isiPhone()) {
-			playerTimeout += 80000;
+			//playerTimeout += 80000;
 			if (!lameChecked) {
 				doLameCheck();
 			}
@@ -671,7 +671,8 @@
 			$("#settings_princi").html("");
 			// streamingFormat
 			if (isiPhone()) {
-				codec = `IOS Device detected - on these, only mp3 format is supported.<p>${contButton}`;
+				fmtCont = `<a href="javascript:void(0)" id="FormattagID" onclick="location.href='./main';" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Continue</a>`
+				codec = `IOS Device detected - on these, only mp3 format is supported.<p>${fmtCont}`;
 				$("#settings_princi").html(codec);
 				$("#settings_princi").show();
 			} else {

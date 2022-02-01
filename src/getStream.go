@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"sync"
 )
@@ -58,10 +59,13 @@ func (statusPtr *statusStruct) getStream(w http.ResponseWriter, r *http.Request)
 		ourNewTag.isIOS = (codec == "mp3")
 	}
 
-	ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, EXTN)
+	exten := EXTN
 	if ourNewTag.isIOS {
-		ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, "mp3")
+		exten = "mp3"
 	}
+
+	ourNewTag.audioFile = fmt.Sprintf("%s/%s.%s", tmpDir, tag, exten)
+	ourNewTag.audioFile = filepath.FromSlash(ourNewTag.audioFile)
 
 	ourNewTag.programIndex = "0"
 	ourNewTag.programIndex = qstrings.Get("program")

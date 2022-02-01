@@ -28,7 +28,7 @@ var (
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 2.0b"
+	version       = binName + " Ver 2.0c"
 	staticFs      = "../static"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
