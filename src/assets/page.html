@@ -1,0 +1,92 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>yellowShoes: nrsc5 radio player (HD FM Radio)</title>
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+
+	<!--
+		<link rel="stylesheet" href="//evuraan.info/jquery/jquery.mobile-1.4.5/jquery.mobile-1.4.5.css" />
+		<script type="text/javascript" src="//evuraan.info/jquery/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="//evuraan.info/jquery/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+		-->
+		<script type="text/javascript" src="./controls"></script>
+	<meta name="viewport" content="width=device-width" />
+	<link rel="shortcut icon" href="./favicon.ico" />
+</head>
+
+<body>
+	<!-- This is the first page -->
+	<section id="firstpage" data-role="page" data-title="yellowShoes">
+		<div class="ui-content" role="main">
+			<img src="./favicon.ico" width="20" height="20">
+			<h1 id="h1id">yellowShoes</h1>nrsc5 radio player (HD FM Radio)<br>
+
+			<div id="freqSlider">
+				<p id="geervan"></p>
+				<input type="range" name="slider-1" id="slider-1" data-highlight="true" data-show-value="true" min="88.0" max="108.0" step=".1" value="88.5">
+				<a href="javascript:void(0)" data-role="button" onclick=playAudio() id="playButton" class="ui-link ui-btn ui-btn-b ui-btn-icon-left ui-btn-inline ui-shadow ui-corner-all ui-icon-audio" data-theme="c">Play</a>
+			</div>
+
+			<p id="player_area"></p>
+			<p id="blast_radius"></p>
+			<p id="princi"></p>
+			<p id="marks"></p>
+		</div>
+
+
+		<a href="javascript:void(0)" id="reloadButton" data-role="button" onClick="window.location.reload()" data-theme="b">Reload</a>
+		<a href="javascript:void(0)" id="reloadButton" onclick=ontoBookmarks() data-role="button" data-theme="b">Bookmarks</a>
+		<a href="javascript:void(0)" id="reloadButton" data-role="button" onClick="toSettings()" data-theme="b">Settings</a>
+
+
+	</section>
+
+	<section id="settings" data-role="page" data-title="yellowShoes">
+		<div class="ui-content" role="main">
+			<img src="./favicon.ico" width="20" height="20">
+			<h1 id="h1id">yellowShoes</h1>
+			<p id="nset">nrsc5 radio player (HD FM Radio)</p>
+			<span id="advanced_menu">
+				<a href="javascript:void(0)" data-role="button" onclick=toRTLTCPSettings() data-theme="b">Set
+					rtltcp-host</a>
+				<a href="javascript:void(0)" data-role="button" onclick=toPlayerTimeoutSettings() data-theme="b">Set
+					playerTimeout</a>
+				<a href="javascript:void(0)" data-role="button" onclick=manageBooks() data-theme="b">Manage
+					Bookmarks</a>
+				<a href="javascript:void(0)" data-role="button" onclick=manageStreamingFormat() data-theme="b">Streaming
+					Format</a>
+				<a href="javascript:void(0)" data-role="button" onclick=stopAllSessions() data-theme="b">Manage
+					Sessions</a>
+				<a href="javascript:void(0)" data-role="button" onclick=exportSettings() data-theme="b">Export
+					Settings</a>
+				<a href="javascript:void(0)" data-role="button" onclick=importSettings() data-theme="b">Import Settings
+					and Bookmarks</a>
+				<a href="javascript:void(0)" data-role="button" onclick=about() data-theme="b">About</a>
+			</span>
+			<p id="settings_princi"></p>
+		</div>
+		<a href="javascript:void(0)" id="reloadButton" onclick="location.href='./main';" data-role="button" data-theme="b">Back</a>
+	</section>
+
+	<section id="addBMarks" data-role="page" data-title="yellowShoes">
+		<div class="ui-content" role="main">
+			<img src="./favicon.ico" width="20" height="20">
+			<h1 id="h1idBm">yellowShoes</h1>
+			<p id="snowPlay">Add a program bookmark
+			<p>
+				<span id="addBlo">
+					<form id="addBID">
+						<input type="number" step="0.01" id="addFreq" placeholder="Frequency, e.g.: 88.5" required name="bFreq">
+						<input type="number" id="bgProgaa" placeholder="Program ID, e.g.: 0" required name="bProg">
+						<input type="text" id="bgProgaa" placeholder="Description, e.g.: Awesome Christmas Music" required name="bukName">
+						<input class="btn btn-primary" type="submit" name="submit" value="Add Bookmark" />
+					</form>
+				</span>
+			<p id="tuu"></p>
+		</div>
+		<a href="javascript:void(0)" id="reloadButton" onclick="location.href='./main';" data-role="button" data-theme="b">Back</a>
+	</section>
+</body>
