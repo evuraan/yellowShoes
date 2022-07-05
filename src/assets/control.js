@@ -240,7 +240,7 @@ function blaster() {
             }
 
             if (progIdx.length > 0) {
-                showThis = `${showThis}<br>Programs found:<br>${progIdx}`;
+                showThis = `${showThis}<br>Programs found 📻:<br>${progIdx}`;
             }
 
             $("#blast_radius").html(showThis);
@@ -556,7 +556,7 @@ function about() {
     // $("#settings_princi").html(`${abtButton}<p id="uiVerid">UI Version: ${uiVersion}</p>`);
     $("#settings_princi").show();
     aboutUrl = `./getVersion?ran=${gRandom}`
-    donateButton = `<br><a href="javascript:void(0)" id="contiB" onclick=donate() class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Donate</a>`;
+    donateButton = `<br><a href="javascript:void(0)" id="contiB" onclick=donate() class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" data-role="button" data-theme="b">Donate 💱</a>`;
     siteButton = `<a href="https://evuraan.info/yellowShoes/" class="ui-link ui-btn ui-btn-b  ui-btn-inline ui-shadow ui-corner-all" rel="external" data-role="button" data-theme="b">yellowShoes</a>`;
     $.get(aboutUrl, function (data) {
         backEnd = `<p id="backEndId">Server Version: ${data}</p>`;
@@ -638,7 +638,7 @@ function manageStreamingFormat() {
         mp3Button = `<a href="javascript:void(0)" data-role="button" onclick="selectCodec('mp3')" id="mp3ButtonID" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all"  data-theme="c">mp3</a>`;
         wavButton = `<a href="javascript:void(0)" data-role="button" onclick="selectCodec('wav')" id="wavButtonID" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-btn-icon-left ui-corner-all"  data-theme="c">wav</a>`;
         speechGyan = `<p>For an optimal listening experience, choose wav format. Please note though, wav format is uncompressed so you need to have a good data connection.`
-        codec = `Current Format: ${localStorage.streamingFormat}<p>${mp3Button} ${wavButton}${speechGyan}`;
+        codec = `Current Format: ${localStorage.streamingFormat} ✅<p>${mp3Button} ${wavButton}${speechGyan}`;
 
         if (hasLame) {
             $("#settings_princi").html(codec);
