@@ -1,6 +1,8 @@
 package main
 
 import (
+	"embed"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,22 +19,26 @@ import (
 	"time"
 )
 
+//go:embed  assets/page.html assets/wait.gif assets/yellowShoes.jpg assets/control.js assets/128.wav
+var embedFs embed.FS
+
 var (
-	tmpDir     = ""
-	port       = ""
-	status     = &statusStruct{cmdMap: make(map[*exec.Cmd]bool), tagMap: make(map[string]*tagStruct)}
-	nrsc5      = ""
-	lookFor    = []string{"Title", "Station name", "Slogan", "Artist", "Album", "Genre", "Audio bit rate", "BER", "MER", "Audio component"}
-	mustStatOk = []string{page, gif, ico, catchup}
+	tmpDir  = ""
+	port    = ""
+	status  = &statusStruct{cmdMap: make(map[*exec.Cmd]bool), tagMap: make(map[string]*tagStruct)}
+	nrsc5   = ""
+	lookFor = []string{"Title", "Station name", "Slogan", "Artist", "Album", "Genre", "Audio bit rate", "BER", "MER", "Audio component"}
+	// mustStatOk = []string{page, gif, ico, catchup}
 )
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 2.0c"
-	staticFs      = "../static"
+	version       = binName + " Ver 3"
+	staticFs      = "assets"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
 	ico           = staticFs + "/yellowShoes.jpg"
+	controlJs     = staticFs + "/control.js"
 	catchup       = staticFs + "/128.wav"
 	EXTN          = "wav"
 	fileWaitConst = 42
@@ -60,7 +66,6 @@ type tagStruct struct {
 	freq         string
 	audioFile    string
 	cmd          string
-	pid          int
 	programIndex string
 	rtlTcp       string
 	lookFor      []string
@@ -169,14 +174,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	for i := range mustStatOk {
-		item := mustStatOk[i]
-		if !checkFile(item) {
-			fmt.Fprintf(os.Stderr, "Error 11.2: %s does not exist\n", item)
-			os.Exit(1)
-		}
-	}
-
 	go status.init()
 	mux := http.NewServeMux()
 	mux.HandleFunc("/stop", status.stopAll)
@@ -185,6 +182,7 @@ func main() {
 	mux.HandleFunc("/main", mainPageHandler)
 	mux.HandleFunc("/favicon.ico", faviconHandler)
 	mux.HandleFunc("/gif", gifHandler)
+	mux.HandleFunc("/basegif", baseGif)
 	mux.HandleFunc("/wav", wavHandler)
 	mux.HandleFunc("/getStream", status.getStream)
 	mux.HandleFunc("/getAudio", status.getAudio)
@@ -196,7 +194,7 @@ func main() {
 	mux.HandleFunc("/valBookMark", validateBookmark)
 	mux.HandleFunc("/checkSettings", checkSettings)
 	mux.HandleFunc("/import", doImport)
-
+	mux.HandleFunc("/controls", controls)
 	err := http.ListenAndServe(":"+port, mux)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "listen err %v\n", err)
@@ -253,7 +251,6 @@ func (statusPtr *statusStruct) getActiveTag(w http.ResponseWriter, r *http.Reque
 		}
 	}
 	fmt.Fprint(w, "No_Active_Tags")
-	return
 }
 
 func (statusPtr *statusStruct) killAll() bool {
@@ -279,33 +276,75 @@ func (statusPtr *statusStruct) killAll() bool {
 }
 
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, ico)
+	serveEmbed(ico, w)
 }
+
+func baseGif(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "max-age=3600")
+	w.Header().Set("Etag", "CSDEExxx")
+	p, err := embedFs.ReadFile(gif)
+	if err != nil {
+		checkErr(err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	based := base64.StdEncoding.EncodeToString(p)
+	if len(based) < 1 {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	fmt.Fprint(w, based)
+}
+
 func gifHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, gif)
+	// http.ServeFile(w, r, gif)
+	w.Header().Set("Cache-Control", "max-age=3600")
+	etag := "favi121"
+	w.Header().Set("Etag", etag)
+	serveEmbed(gif, w)
+}
+
+func controls(w http.ResponseWriter, r *http.Request) {
+	serveEmbed(controlJs, w)
+}
+
+func serveEmbed(resname string, w http.ResponseWriter) (ok bool) {
+	if len(resname) < 1 {
+		return
+	}
+	go fmt.Println("serveEmbed", resname)
+	p, err := embedFs.ReadFile(resname)
+	if err != nil {
+		checkErr(err)
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.Write(p)
+	return true
 }
 
 func wavHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=0")
-	http.ServeFile(w, r, catchup)
+	// http.ServeFile(w, r, catchup)
+	serveEmbed(catchup, w)
 }
 
 func getVersion(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=0")
 	fmt.Fprint(w, version)
-	return
 }
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Incoming: GET Attempt from %s\n", r.RemoteAddr)
-	http.Redirect(w, r, "./main", 301)
-	return
+	http.Redirect(w, r, "./main", http.StatusMovedPermanently)
 }
 
 func mainPageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "max-age=0")
-	http.ServeFile(w, r, page)
-	return
+	// http.ServeFile(w, r, page)
+	serveEmbed(page, w)
+
 }
 
 func (statusPtr *statusStruct) stopAll(w http.ResponseWriter, r *http.Request) {
@@ -314,7 +353,6 @@ func (statusPtr *statusStruct) stopAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	go statusPtr.killAll()
-	return
 }
 
 func checkFile(fileName string) bool {
@@ -459,7 +497,6 @@ func doImport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	jewels["status"] = true
-	return
 }
 
 func checkSettings(w http.ResponseWriter, r *http.Request) {
@@ -590,7 +627,6 @@ func checkSettings(w http.ResponseWriter, r *http.Request) {
 		jewels["lace"] = lace
 	}
 
-	return
 }
 
 //bFreq=88.1&bProg=0&bukName=Samtha+Add+a+program+bookmark
@@ -630,7 +666,6 @@ func validateBookmark(w http.ResponseWriter, r *http.Request) {
 	returnThis["bFreq"] = bFreq
 	returnThis["Prog"] = bProg
 	returnThis["bukName"] = bukName
-	return
 }
 
 func checkErr(err error) {
@@ -649,7 +684,7 @@ func validateFreq(someFreq string) (ok bool) {
 		return
 	}
 
-	err = fmt.Errorf("Frequency %v failed validation\n", someFreq)
+	err = fmt.Errorf("err: Frequency %v failed validation", someFreq)
 	// min="88.0" max="108.0"
 	if floatFreq < 88.0 {
 		checkErr(err)
@@ -672,7 +707,7 @@ func validateProg(someProg string) (ok bool) {
 	for i := range someProg {
 		char := fmt.Sprintf("%c", someProg[i])
 		if !strings.Contains(progAllowed, char) {
-			err := fmt.Errorf("Program Number %s failed validation\n", someProg)
+			err := fmt.Errorf("program Number %s failed validation", someProg)
 			go checkErr(err)
 			return
 		}
@@ -689,7 +724,7 @@ func validateBookName(someName string) (ok bool) {
 	for i := range someName {
 		char := fmt.Sprintf("%c", someName[i])
 		if strings.Contains(bookDeny, char) {
-			err := fmt.Errorf("Bookmark Name %s failed validation\n", someName)
+			err := fmt.Errorf("bookmark Name %s failed validation", someName)
 			go checkErr(err)
 			return
 		}
