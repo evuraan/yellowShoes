@@ -23,20 +23,6 @@ Using defaults
 Using temp dir: /tmp, port: 8113
 Current Connections 0
 ```
-
-* Launch a browser and navigate to `http://<Your_Address>:Port/main` to launch the UI. (Default port = 8113).
-
-
-```bash
-evuraan@lego:~/git/yellowShoes/bin$ ./yellowShoes-linux-amd64 
-yellowShoes Ver 1.07b Copyright (C) Evuraan <evuraan@gmail.com>
-This program comes with ABSOLUTELY NO WARRANTY.
-Using defaults
-Using temp dir: /tmp, port: 8113
-Current Connections 0
-Current Connections 0
-..
-```
 Windows:
 ```
 PS C:\temp\yellowShoes\bin> .\yellowShoes-win-amd64.exe
@@ -49,6 +35,9 @@ Current Connections 0
 Current Connections 0
 ...
 ```
+
+* Launch a browser and navigate to `http://<Your_Address>:Port/main` to launch the UI. (Default port = 8113).
+
 
 # Usage
 
