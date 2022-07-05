@@ -7,7 +7,7 @@ changeInpBox = true;
 errShown = false;
 rtlTCP = "none";
 streamingFormat = "wav";
-uiVersion = `v3`;
+uiVersion = `v3.1`;
 showThese = ['Artist', 'Title', 'Genre', 'Audio bit rate', 'Station name', 'Format'];
 error = "";
 bookmarkClass = `class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart"`;
@@ -97,29 +97,7 @@ $("#freqSlider").change(function () {
     showfreq();
 });
 
-function localDemo() {
-    if (localStorage && 'localDemoDone' in localStorage) {
-        if (localStorage.localDemoDone == "true") {
-            return
-        }
-    }
-    lTxt = `
-    <span id="demo">Welcome to the demo.<br>Below are some stations to try out:<br>
-    <a href="javascript:void(0)" data-role="button" onclick="doneDemo()" id="jidembkr" class="ui-btn ui-icon-delete ui-btn-icon-notext ui-corner-all">No text</a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=106.9&program=1&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">106.9 Christmas Songs All Year Long!</a> 
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=106.1&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">106.1 Hits </a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=107.7&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">KNDD-FM 107.7 0</a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=92.5&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">KQMV-FM 92.5 0</a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=102.5&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">102.5  </a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=94.1&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">KSWD-FM 94.1 You Are Not Alone 0</a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=88.5&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">NPR 88.5 (0)</a>
-<a href="javascript:void(0)" data-role="button" onclick="presetPlay('./getStream?freq=98.1&program=0&ran=${gRandom}&rtl_tcp=demo:3431&format=wav')" id="goMain" class="ui-link ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-btn-icon-left ui-icon-heart" data-theme="c">Classical 98.1</a>
-<p><a href="https://evuraan.info/yellowShoes/?PoC=${gRandom}" ${shorty} style="background: teal; color: white;">About yellowShoes</a>
-</span>
-    `
-    $("#marks").html(lTxt);
-}
-localDemo()
+
 
 function presetPlay(url) {
     $("#freqSlider").hide();
@@ -128,15 +106,6 @@ function presetPlay(url) {
     playK(url);
 }
 
-function doneDemo() {
-    ham = `Station`
-    ham = `${ham}<br><a href="javascript:void(0)" onclick="pleaseHideSuggestions()" ${shorty} >Never Show these again</a> ${cancel1}`
-    $("#demo").html(ham);
-}
-
-function pleaseHideSuggestions() {
-    localStorage.localDemoDone = "true"
-}
 
 function checkBookMark(key) {
     data = localStorage.getItem('key');
