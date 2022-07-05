@@ -15,7 +15,8 @@ Here is a <a href="https://evuraan.info/yellowShoesDemo/main">Demo Instance</a>.
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
 * Download `yellowShoes` binary appropriate for your system.  (Either pick an appropriate binary from [bin](https://github.com/evuraan/yellowShoes/tree/main/bin), or, download the [release](https://github.com/evuraan/yellowShoes/releases), or,  clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
 * Launch the native binary you downloaded:
-```bash$ ./yellowShoes-linux-amd64 
+```bash
+$ ./yellowShoes-linux-amd64 
 yellowShoes Ver 3 Copyright (C) Evuraan <evuraan@gmail.com>
 This program comes with ABSOLUTELY NO WARRANTY.
 Using defaults
