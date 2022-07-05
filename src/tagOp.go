@@ -204,7 +204,6 @@ func (statusPtr *statusStruct) getErrMsg(w http.ResponseWriter, r *http.Request)
 	if len(statusPtr.messages) > 0 {
 		fmt.Fprint(w, strings.Join(statusPtr.messages[:], "\n"))
 	}
-	return
 }
 
 func (statusPtr *statusStruct) getInfo(w http.ResponseWriter, r *http.Request) {
@@ -237,7 +236,6 @@ func (statusPtr *statusStruct) getInfo(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "max-age=0")
 		w.Write(data)
 	}
-	return
 }
 
 func (statusPtr *statusStruct) appendMessage(message string) {
