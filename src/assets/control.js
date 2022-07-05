@@ -50,9 +50,9 @@ if (localStorage && 'spinner' in localStorage) {
 gifPro = $.get("./basegif")
 gifPro.done(function (tdata, status) {
     if (status == "success" && tdata.length > 0) {
-        spinner = `<img src="data:image/gif;base64,${tdata}" style="width:96px;height:96px;">`
+        spinner = `<img src="data:image/gif;base64,${tdata}" style="width:96px;height:96px;">`;
         localStorage.spinner = spinner;
-    }
+    } 
 });
 
 
