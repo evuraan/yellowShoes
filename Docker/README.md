@@ -15,7 +15,7 @@ sudo docker build -f Dockerfile -t yellowshoes .
 ```
 
 ## Running the Docker Image:
-Once built, you can instantiate your `yellowShoes` docker image as root:
+Once built, you can instantiate your `yellowShoes` docker image:
 ```bash
 docker run  --log-driver none -v /tmp:/tmp -p 8113:8113 --rm yellowshoes
 ```
