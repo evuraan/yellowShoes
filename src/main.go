@@ -19,7 +19,7 @@ import (
 	"time"
 )
 
-//go:embed  assets/page.html assets/wait.gif assets/yellowShoes.jpg assets/control.js assets/128.wav
+//go:embed  assets/page.html assets/wait.gif assets/yellowShoes.jpg assets/128.wav
 var embedFs embed.FS
 
 var (
@@ -33,7 +33,7 @@ var (
 
 const (
 	binName       = "yellowShoes"
-	version       = binName + " Ver 3"
+	version       = binName + " Ver 3.0.1a"
 	staticFs      = "assets"
 	page          = staticFs + "/page.html"
 	gif           = staticFs + "/wait.gif"
