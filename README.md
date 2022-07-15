@@ -1,5 +1,5 @@
 # yellowShoes
-nrsc5 (HD FM) radio player 
+nrsc5 (HD FM) radio player - web based, mobile friendly
 
 ## Description
 If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle</a> that can receive <a href="https://en.wikipedia.org/wiki/HD_Radio">NRSC-5</a> digital radio stations, you can use `yellowShoes` as the playback and control UI (User-interface). Navigate to your `yellowShoes` instance from a decent web browser, and you're good to go!
