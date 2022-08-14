@@ -10,7 +10,8 @@ Here is a <a href="https://evuraan.info/yellowShoesDemo/main">Demo Instance</a>.
 # Requirements
 * You must have <a href="https://github.com/theori-io/nrsc5">nrsc5</a> compiled and installed. The `nrsc5` binary must be in your `PATH`. 
 * Optional Requirement: If you want mp3 playback (or have IOS devices), you will need `lame` encoder binary in your `PATH`. See [IOS Playback](./IOS/README.md) section.
-
+# Album Art
+Album art has been enabled as an experimental [feature](https://github.com/evuraan/yellowShoes/issues/7). 
 # Setup 
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
 * Download `yellowShoes` binary appropriate for your system.  (Either pick an appropriate binary from [bin](https://github.com/evuraan/yellowShoes/tree/main/bin), or, download the [release](https://github.com/evuraan/yellowShoes/releases), or,  clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
