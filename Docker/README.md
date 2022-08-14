@@ -5,6 +5,7 @@ If you're looking to run `yellowShoes` inside a docker container, let's start wi
 * You're running 64bit Linux, so we will run `yellowShoes-linux-amd64` inside the docker container.
 * You are `dockeruser` who is a member of the `docker` group
 * You have `rtl_tcp` running in your network, and won't be talking to the SDR Dongle on your usb bus. ([See more about `rtl_tcp`](https://github.com/evuraan/yellowShoes#optional-rtl_tcp))
+* You want `-enableAlbumArt` [enabled for album art](https://github.com/evuraan/yellowShoes/tree/Album_Art#enabling-album-art) rendering.
 
 Here's a [Dockerfile](./Dockerfile) that we can use. 
 
