@@ -102,7 +102,7 @@ go build
 Also see the included [`make.sh`](./src/make.sh) that is used to generate binaries into `bin` folder. 
 
 # Screenshots 
-<img src="./Screenshots/Screenshot1.png">
+<img src="./Screenshots/yellowShoes_npr.png">
 <img src='./Screenshots/join.png'>
 <img src='./Screenshots/Playing.png'>
 <img src='./Screenshots/Play.png'>
