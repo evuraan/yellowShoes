@@ -1,0 +1,7 @@
+12176caff1a5920cf45d1cbf850d7b76  yellowShoes-linux-386
+1f35f9239250baef60438d58df94bcb4  yellowShoes-linux-amd64
+a3ea84dc8f140c9ca11fabd10f9c8533  yellowShoes-linux-armv6l
+327d25d39c7ae69a535ba2fa046267f3  yellowShoes-linux-armv7l
+4c0a7358a061ec241600fdc2354a4753  yellowShoes-win-386.exe
+e6b47fb6fa712923e96e85e4f3627e13  yellowShoes-win-amd64.exe
+#Generated: Sun 14 Aug 2022 09:28:18 AM PDT
