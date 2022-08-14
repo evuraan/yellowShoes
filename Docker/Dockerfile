@@ -12,4 +12,4 @@ RUN apt-get -qq update && \
 EXPOSE 8113
 WORKDIR /opt/yellowShoes/bin
 USER nobody
-CMD ["./yellowShoes-linux-amd64"]
+CMD ["./yellowShoes-linux-amd64","-enableAlbumArt"]
