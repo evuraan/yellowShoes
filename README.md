@@ -22,7 +22,8 @@ Then navigate to `Settings -> Cover Art` and [enable](./Screenshots/YellowShoes_
 
 # Setup 
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
-* Download `yellowShoes` binary appropriate for your system.  (Either pick an appropriate binary from [bin](https://github.com/evuraan/yellowShoes/tree/main/bin), or, download the [release](https://github.com/evuraan/yellowShoes/releases), or,  clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
+* Download `yellowShoes` binary appropriate for your system:   Pick and download an appropriate binary from [bin](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin) from the [Album_Art branch](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin). 
+
 * Launch the native binary you downloaded:
 ```bash
 $ ./yellowShoes-linux-amd64 
