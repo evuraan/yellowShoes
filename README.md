@@ -70,10 +70,6 @@ Usage of ./yellowShoes:
 ## Optional: rtl_tcp
 If you have `rtl_tcp` running in your network,  yellowShoes can connect to it - navigate to the <a href='./Screenshots/Settings.png'>settings</a> section to set it up. 
 
-# Bandwidth Requirement
-We modify the `wav` struct a little bit so it can be live streamed. Since `wav` is lossless and uncompressed, it consumes a lot of bandwidth. 
-
-For example: It was observed to use about `2.2 Mbps` for a `47.1 kbps` FM broadcast. 
 
 # yellowShoes and Docker
 You can run yellowShoes inside a Docker container. See the [Docker section](./Docker). 
@@ -90,15 +86,6 @@ Options -Indexes
 ```
 This would allow `proto://myapp.dev/hdFm/main` externally. 
 
-# Optional: Build 
-If you prefer to build the binaries yourself, you will need the [Go Programming Language](https://golang.org/dl/) installed on your System. 
-
-Go into `src` folder and build as: 
-``` 
-go build
-```
-Also see the included [`make.sh`](./src/make.sh) that is used to generate binaries into `bin` folder. 
-
 # Screenshots 
 <img src="./Screenshots/yellowShoes_npr.png">
 <img src='./Screenshots/join.png'>
@@ -106,11 +93,6 @@ Also see the included [`make.sh`](./src/make.sh) that is used to generate binari
 <img src='./Screenshots/Play.png'>
 <img src='./Screenshots/Settings.png'>
 <img src='./Screenshots/OnError.png'>
-
-# Changelog 
-* 1.08f-ui-1.3d - initial release 
-* 1.09b-ui-1.4c - playback support for IOS devices 
-* 2.0a-ui-2.0a - All feature requests from https://github.com/evuraan/yellowShoes/issues/3: sync between devices/browsers, update title with the current station name and artist/title info,  manual entry of bookmarks without needing to have them tuned beforehand. 
 
 # References
 * https://github.com/markjfine/nrsc5-dui
@@ -124,6 +106,3 @@ Also see the included [`make.sh`](./src/make.sh) that is used to generate binari
 <a href="http://joetut.com" rel="noreferrer" target="_blank">joetut.com</a> || <a href="http://instagram.com/joewinograd" rel="noreferrer" target="_blank" >instagram.com/joewinograd</a><br>
 (For allowing `yellowShoes` to use this wonderful [GIF](./static/wait.gif).)
  
- # Donate 
-[![](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=WTUV64BF3TLW2)
-<p>Thank you for donating. Your donations will be used to maintain this project.
