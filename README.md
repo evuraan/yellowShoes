@@ -24,16 +24,19 @@ Then navigate to `Settings -> Cover Art` and [enable](./Screenshots/YellowShoes_
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
 * Download `yellowShoes` binary appropriate for your system:   Pick and download an appropriate binary from [bin folder](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin) of the [Album_Art branch](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin). 
 
-* Launch the native binary you downloaded:
+* Launch the  binary you downloaded:
 ```bash
 $ ./yellowShoes -enableAlbumArt 
 yellowShoes Ver 4.0a Copyright (C) Evuraan <evuraan@gmail.com>
 This program comes with ABSOLUTELY NO WARRANTY.
 Using temp dir: /tmp, port: 8113
-
+```
+Windows 
+```powershell
+PS C:\temp\yellowShoes\bin> .\yellowShoes-win-amd64.exe
 ```
 
-* Launch a browser and navigate to `http://<Your_Address>:Port/main` to launch the UI. (Default port = 8113).
+* Launch a browser and navigate to `http://<Your_Address>:Port/main` to launch the UI. Example: `http://192.168.1.134:8113/main`
 
 
 # Usage
