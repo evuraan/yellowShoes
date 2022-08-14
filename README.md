@@ -41,16 +41,19 @@ Current Connections 0
 
 # Usage
 
-Default port is 8113. If you wish to specify an alternate port or temp directory, use the `-p` and `-t` options: 
+Default port is 8113. If you wish to specify an alternate port or temp directory, use the appropriate input arguments:
 ```bash
-evuraanlego:~/git/yellowShoes/bin$ ./yellowShoes-linux-amd64 -h
-yellowShoes Ver 1.07b Copyright (C) Evuraan <evuraan@gmail.com>
+$ ./yellowShoes -h
+yellowShoes Ver 4.0a Copyright (C) Evuraan <evuraan@gmail.com>
 This program comes with ABSOLUTELY NO WARRANTY.
-Usage: ./yellowShoes-linux-amd64 -t /tmp -p 8118
-  -h  --help         print this usage and exit
-  -t  --tempFolder   temp folder with write access to use
-  -p  --port         port to use
-  -v  --version      print version information and exit
+Usage of ./yellowShoes:
+  -enableAlbumArt
+    	enable album art
+  -port string
+    	port to use (default "8113")
+  -tempFolder string
+    	temp folder with write access to use (default "/tmp")
+  -v	print version information and exit
 ```
 
 
