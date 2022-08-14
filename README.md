@@ -12,6 +12,16 @@ Here is a <a href="https://evuraan.info/yellowShoesDemo/main">Demo Instance</a>.
 * Optional Requirement: If you want mp3 playback (or have IOS devices), you will need `lame` encoder binary in your `PATH`. See [IOS Playback](./IOS/README.md) section.
 # Album Art
 Album art has been enabled as an experimental [feature](https://github.com/evuraan/yellowShoes/issues/7). 
+
+Enabling this option will make your backend initiate network traffic to search and find cover/album art images. The results we find may be inaccurate or even inappropriate.
+
+## Enabling Album Art
+You must launch `yellowShoes` with `-enableAlbumArt` to enable album art. 
+```bash
+$ ./yellowShoes -enableAlbumArt
+```
+Then navigate to `Settings -> Cover Art` and enable 
+
 # Setup 
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
 * Download `yellowShoes` binary appropriate for your system.  (Either pick an appropriate binary from [bin](https://github.com/evuraan/yellowShoes/tree/main/bin), or, download the [release](https://github.com/evuraan/yellowShoes/releases), or,  clone this repo, or download and extract the <a href="https://github.com/evuraan/yellowShoes/archive/refs/heads/main.zip">Zip file</a>.)
