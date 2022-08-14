@@ -13,6 +13,8 @@ Album art has been enabled as an experimental [feature](https://github.com/evura
 
 Enabling this option will make your backend initiate network traffic to search and find cover/album art images. The results we find may be inaccurate or even inappropriate.
 
+Builds that support Album Art are [ kept here](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin).
+
 ## Enabling Album Art
 You must launch `yellowShoes` with `-enableAlbumArt` to enable album art. 
 ```bash
