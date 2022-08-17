@@ -9,11 +9,14 @@ If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle
 * Optional Requirement: If you want mp3 playback (or have IOS devices), you will need `lame` encoder binary in your `PATH`. See [IOS Playback](./IOS/README.md) section.
 
 # Album Art
+<img src="./Screenshots/Screenshot%20at%202022-08-16%2021-27-37.png">
+
 Album art has been enabled as an experimental [feature](https://github.com/evuraan/yellowShoes/issues/7). Album Art tiles works on mobile device lock screens and desktop browsers. 
 
 Enabling this option will make your backend initiate network traffic to search and find cover/album art images. The results we find may be inaccurate or even inappropriate.
 
 Builds that support Album Art are [ kept here](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin).
+
 
 ## Enabling Album Art
 You must launch `yellowShoes` with `-enableAlbumArt` to enable album art. 
