@@ -14,6 +14,7 @@ GOOS=windows GOARCH=amd64 go build -o ../bin/yellowShoes-win-amd64.exe
 GOOS=windows GOARCH=386 go build -o ../bin/yellowShoes-win-386.exe 
 GOOS=linux GOARCH=amd64 go build -o ../bin/yellowShoes-linux-amd64 
 GOOS=linux GOARCH=386 go build -o ../bin/yellowShoes-linux-386 
+GOOS=darwin GOARCH=arm64 go build -o ../bin/yellowShoes-darwin-arm64 
 
 cd ../bin
 md5sum yell* > md5sum.txt
