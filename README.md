@@ -25,7 +25,7 @@ Album art has been enabled as an experimental [feature](https://github.com/evura
 
 Enabling this option will make your backend initiate network traffic to search and find cover/album art images. The results we find may be inaccurate or even inappropriate.
 
-Builds that support Album Art are [ kept here](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin).
+Builds that support Album Art are [ kept here](https://github.com/evuraan/yellowShoes/tree/yellowShoes_with_Webamp_Milkdrop/bin).
 
 
 ### Enabling Album Art
@@ -37,7 +37,7 @@ Then navigate to `Settings -> Cover Art` and [enable](./Screenshots/YellowShoes_
 
 # Setup 
 * Setup <a href="https://github.com/theori-io/nrsc5">nrsc5</a>  
-* Download the `yellowShoes` binary suitable for your Operating System and Platform from [bin folder](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin) of the [Album_Art branch](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin). 
+* Download the `yellowShoes` binary suitable for your Operating System and Platform from [bin folder](https://github.com/evuraan/yellowShoes/tree/yellowShoes_with_Webamp_Milkdrop/bin) of the [yellowShoes_with_Webamp_Milkdrop branch](https://github.com/evuraan/yellowShoes/tree/yellowShoes_with_Webamp_Milkdrop/bin). 
 
 * Launch the  binary you downloaded:
 ```bash
