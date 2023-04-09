@@ -8,7 +8,8 @@ If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle
 * You must have <a href="https://github.com/theori-io/nrsc5">nrsc5</a> compiled and installed. The `nrsc5` binary must be in your `PATH`. 
 * Optional Requirement: If you want mp3 playback (or have IOS devices), you will need `lame` encoder binary in your `PATH`. See [IOS Playback](./IOS/README.md) section.
 
-# Album Art
+# New Features 
+## Album Art
 <img src="./Screenshots/Screenshot%20at%202022-08-16%2021-27-37.png">
 
 Album art has been enabled as an experimental [feature](https://github.com/evuraan/yellowShoes/issues/7). Album Art tiles works on mobile device lock screens and desktop browsers. 
@@ -18,7 +19,7 @@ Enabling this option will make your backend initiate network traffic to search a
 Builds that support Album Art are [ kept here](https://github.com/evuraan/yellowShoes/tree/Album_Art/bin).
 
 
-## Enabling Album Art
+### Enabling Album Art
 You must launch `yellowShoes` with `-enableAlbumArt` to enable album art. 
 ```bash
 $ ./yellowShoes -enableAlbumArt
