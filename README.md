@@ -10,7 +10,7 @@ If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle
 
 # New Features 
 ## Webamp and Milkdrop 
-Webamp and Milkdrop allows to offload playback to Webamp. It has an Equalizer and a Music Visualizer. 
+ Equalizer and a Music Visualizer. 
 
 ![image](https://user-images.githubusercontent.com/39205936/230750168-184500f2-1dc7-4b60-9973-91ea31852c5a.png)
 
