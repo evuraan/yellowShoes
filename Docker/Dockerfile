@@ -7,7 +7,7 @@ RUN apt-get -qq update && \
 	git clone https://github.com/theori-io/nrsc5.git && \
 	cd nrsc5 && mkdir build && cd build && \
 	cmake .. && make && make install && ldconfig && cd /opt &&  \
-	git clone https://github.com/evuraan/yellowShoes.git -b Album_Art 
+	git clone https://github.com/evuraan/yellowShoes.git -b yellowShoes_with_Webamp_Milkdrop 
 
 EXPOSE 8113
 WORKDIR /opt/yellowShoes/bin
