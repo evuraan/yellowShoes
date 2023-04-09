@@ -97,6 +97,9 @@ This would allow `proto://myapp.dev/hdFm/main` externally.
 * https://www.rtl-sdr.com/
 * https://osmocom.org/projects/rtl-sdr/wiki/Rtl-sdr
 
+# Changelog 
+* Aug 2022 - Album Art feature 
+* Apr 2023 - Enabling Webamp and Milkdrop
 # Thanks:
 * Art by Joe Winograd<br>
 <a href="http://joetut.com" rel="noreferrer" target="_blank">joetut.com</a> || <a href="http://instagram.com/joewinograd" rel="noreferrer" target="_blank" >instagram.com/joewinograd</a><br>
