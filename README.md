@@ -1,8 +1,12 @@
 # yellowShoes
 nrsc5 (HD FM) radio player - web based, mobile friendly
 
+**Screengrab Video**: [https://evuraan.info/evuraan/stuff/yellowShoes_with_Webamp_Milkshake.mp4](https://evuraan.info/evuraan/stuff/yellowShoes_with_Webamp_Milkshake.mp4)
+
+
 ## Description
 If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle</a> that can receive <a href="https://en.wikipedia.org/wiki/HD_Radio">NRSC-5</a> digital radio stations, you can use `yellowShoes` as the playback and control UI (User-interface). Navigate to your `yellowShoes` instance from a decent web browser, and you're good to go!
+
 
 # Requirements
 * You must have <a href="https://github.com/theori-io/nrsc5">nrsc5</a> compiled and installed. The `nrsc5` binary must be in your `PATH`. 
@@ -12,7 +16,7 @@ If you have an <a href="https://www.amazon.com/gp/product/B011HVUEME">SDR Dongle
 ## Webamp and Milkdrop 
  Equalizer and a Music Visualizer. 
  
-**Screengrab Video**: [https://evuraan.info/evuraan/stuff/yellowShoes_with_Webamp_Milkshake.mp4](https://evuraan.info/evuraan/stuff/yellowShoes_with_Webamp_Milkshake.mp4)
+
 
 ![image](https://user-images.githubusercontent.com/39205936/230750168-184500f2-1dc7-4b60-9973-91ea31852c5a.png)
 
