@@ -102,8 +102,8 @@ This would allow `proto://myapp.dev/hdFm/main` externally.
 <img src="./Screenshots/yellowShoes_npr.png">
 <img src='./Screenshots/join.png'>
 <img src='./Screenshots/Playing.png'>
-<img src='./Screenshots/Play.png'>
-<img src='./Screenshots/Settings.png'>
+<img src="https://user-images.githubusercontent.com/39205936/235334136-0ca34edc-151f-4f81-99bb-f4f64e177c5b.png">
+<img src="https://user-images.githubusercontent.com/39205936/235334158-757988b7-56be-4cb0-b64f-b11c0d483157.png">
 <img src='./Screenshots/OnError.png'>
 
 # References
