@@ -1,0 +1,6 @@
+a64857344f93d636446c8f81f976eb26  yellowShoes-darwin-amd64
+c6122fb71a3e0404db56327ab5d4c573  yellowShoes-linux-amd64
+cdc8341675a7c1eb0403dc34873f1a91  yellowShoes-linux-armv6l
+cb2fe9f5040b0a7323d15898446ee8b5  yellowShoes-linux-armv7l
+31a0b1abae7b6ce9f9ef2d2cadf2d992  yellowShoes-win-amd64.exe
+#Generated: Fri Dec 22 07:44:08 PM PST 2023
