@@ -64,14 +64,18 @@ PS C:\temp\yellowShoes\bin> .\yellowShoes-win-amd64.exe
 
 Default port is 8113. If you wish to specify an alternate port or temp directory, use the appropriate input arguments:
 ```bash
-$ ./yellowShoes -h
-yellowShoes Ver 4.0a Copyright (C) Evuraan <evuraan@gmail.com>
+$ ./yellowShoes-linux-amd64 -h
+yellowShoes Ver 6.04d1703303045 Copyright (C) Evuraan <evuraan@gmail.com>
 This program comes with ABSOLUTELY NO WARRANTY.
-Usage of ./yellowShoes:
+Usage of ./yellowShoes-linux-amd64:
   -enableAlbumArt
     	enable album art
-  -port string
-    	port to use (default "8113")
+  -lamePath string
+    	Optional: fullpath to lame binary
+  -nrscPath string
+    	Optional: fullpath to nrsc5 binary
+  -port int
+    	port to use (default 8113)
   -tempFolder string
     	temp folder with write access to use (default "/tmp")
   -v	print version information and exit
